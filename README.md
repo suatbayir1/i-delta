@@ -6,6 +6,28 @@ I-DELTA is a ITEA 3 project that focuses on Distributed Ledger Technologies (DLT
 
 Within the scope of the I-Delta project, a REST API was developed using the **Python** language and the **Flask** framework. To run the API, you should go to the **/backend/app/controllers** folder and run the `python3 Api.py` command.
 
+├── app
+│   ├── config
+│   │   ├── request_keys.py
+│   │   ├── required_keys.py
+│   │   ├── response_messages.py
+│   │   └── secret.py
+│   ├── controllers
+│   │   ├── Api.py
+│   │   ├── AuthController.py
+│   ├── helpers
+│   │   ├── HelperFunctions.py
+│   │   ├── ModelHelper.py
+│   ├── middlewares
+│   │   ├── ApiBase.py
+│   └── models
+│       ├── AuthModel.py
+└── core
+    ├── databases
+    │   ├── MongoDB.py
+    ├── loggers
+    └── scripts
+
 ## UI
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
