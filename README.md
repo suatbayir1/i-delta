@@ -8,6 +8,8 @@ Within the scope of the I-Delta project, a REST API was developed using the **Py
 
 The folder structure where the backend processes are located is created as follows. The development of the following folder structure will be welcomed, however, developers are also expected to comply with this structure as much as possible in terms of project integrity.
 
+Methods that respond to http requests are located in the controllers folder. The file named `Api.py` is the file that raises the service and the subclasses are collected in this file and routing is done.
+
 ```
 ├── app
 │   ├── config
