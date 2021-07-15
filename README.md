@@ -1,1 +1,3 @@
-# i-delta
+# Getting Started with I-Delta
+
+I-DELTA is a ITEA 3 project that focuses on Distributed Ledger Technologies (DLT), it is led by 19 consortiums from 6 contries. Distributed Ledger Technologies (DLT) undoubtedly are a cutting-edge new breed of technologies with the potential to completely transform the way our society works. DLT will foster switching from the “Internet of information" era to the “Internet of Value" era, whereby decentralised and immutable contracts define business interactions and secure exchanges of information. I-DELTA aims to create an interoperable DLT based platform enhanced by AI, integrating with existing IT systems such as ERP and IoT applications.
