@@ -45,6 +45,20 @@ if __name__ == "__main__":
     app.run(debug = True, port = 9632)
 ```
 
+A helper method has been created by using the **decorator** feature of the Python language so that only authorized users can access the methods. If you want only users with the roles you want to access the methods you have developed, you should call the decorator named `@token_control` above the function as follows. In addition, a base class named `ApiBase` has been created and all subclasses are derived from this class in order to carry out common operations to be performed in subclasses from a single place and to easily implement future developments.
+
+```
+class Api(FlaskView, ApiBase):
+    def __init__(self):
+        pass
+
+    @route("test", methods = ["POST"])
+    @token_control(roles = ["admin", "user"])
+    def test(self):
+        return ApiBase.response(self, data = ["one", "two"], message = "response msg", success = True)
+
+```
+
 ## UI
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
