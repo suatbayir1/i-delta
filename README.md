@@ -32,6 +32,8 @@ The folder structure where the backend processes are located is created as follo
     └── scripts
 ```
 
+There are constant values used in the project in the **config** folder.
+
 ## UI
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
