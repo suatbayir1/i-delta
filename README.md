@@ -10,6 +10,10 @@ Within the scope of the I-Delta project, a REST API was developed using the **Py
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
 
+### `npm install`
+
+If you are running the project for the first time, you need to go to the `/frontend` directory and download the npm modules with the `npm install` command.
+
 ### `npm start`
 
 Runs the app in the development mode.\
