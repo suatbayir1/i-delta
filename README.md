@@ -32,7 +32,7 @@ The folder structure where the backend processes are located is created as follo
     └── scripts
 ```
 
-There are constant values used in the project in the **config** folder.
+There are constant values used in the project in the **config** folder. In the config folder, there are properties and response messages that should be present in requests to the API. In addition, confidential information such as passwords are kept here.
 
 ## UI
 
