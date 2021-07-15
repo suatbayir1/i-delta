@@ -8,8 +8,6 @@ Within the scope of the I-Delta project, a REST API was developed using the **Py
 
 The folder structure where the backend processes are located is created as follows. The development of the following folder structure will be welcomed, however, developers are also expected to comply with this structure as much as possible in terms of project integrity.
 
-Methods that respond to http requests are located in the controllers folder. The file named `Api.py` is the file that raises the service and the subclasses are collected in this file and routing is done.
-
 ```
 ├── app
 │   ├── config
@@ -35,6 +33,17 @@ Methods that respond to http requests are located in the controllers folder. The
 ```
 
 There are constant values used in the project in the **config** folder. In the config folder, there are properties and response messages that should be present in requests to the API. In addition, confidential information such as passwords are kept here.
+
+Methods that respond to http requests are located in the controllers folder. The file named `Api.py` is the file that raises the service and the subclasses are collected in this file and routing is done. **AuthController** is the class where login and account creation are made and it is imported to **Api.py** file from outside and registered as a submodule. New classes to be added should be registered in the file named Api.py with this logic.
+
+```
+if __name__ == "__main__":
+    app = Flask(__name__)
+    CORS(app,supports_credentials=True)
+    Api.register(app, route_base = '/api/')
+    AuthController.register(app, route_base = '/api/auth/')
+    app.run(debug = True, port = 9632)
+```
 
 ## UI
 
