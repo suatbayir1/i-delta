@@ -38,6 +38,33 @@ The folder structure where the backend processes are located is created as follo
 
 There are constant values used in the project in the **config** folder. In the config folder, there are properties and response messages that should be present in requests to the API. In addition, confidential information such as passwords are kept here. For example, the code below contains the `response_messages.py` file with the return responses.
 
+```
+# GENERAL
+general = dict(
+    unexpected_error = "An unexpected error occurred",
+    payload_empty = "field(s) cannot be empty or undefined",
+)
+
+# AUTH
+signUp = dict(
+    already_exists = "This username already exists",
+    success = "User created successfully",
+)
+
+signIn = dict(
+    not_found = "User not found",
+    wrong_password = "Wrong password",
+    success = "Login successful"
+)
+
+token = dict(
+    not_found = "Token not found",
+    authorization_error = "This user cannot access this method",
+    token_expired = "Token expired",
+    token_invalid = "Token invalid",
+)
+```
+
 ### Controllers
 
 Methods that respond to http requests are located in the controllers folder. The file named `Api.py` is the file that raises the service and the subclasses are collected in this file and routing is done. **AuthController** is the class where login and account creation are made and it is imported to **Api.py** file from outside and registered as a submodule. New classes to be added should be registered in the file named Api.py with this logic.
@@ -98,6 +125,8 @@ def token_control(f=None, roles=None):
     return decorated
 ```
 
+### Middlewares
+
 In the **middlewares** folder, it is aimed to define the middlewares between the **Controller** and the **UI**, and to perform the necessary actions before the relevant method that will respond to the *HTTP* request works. For example, in the code below, a middleware named `ApiBase` is defined and methods are defined to control the json properties in the request and to standardize the JSON data returned in response.
 
 ```
@@ -139,6 +168,8 @@ class ApiBase():
         return params
 ```
 
+### Models
+
 In the **models** folder, intermediary classes are defined to communicate with the database. It is aimed to carry out database codes in a separate layer due to the desire to write a cleaner code, to distinguish the operations performed from each other, and to provide easier maintenance against future problems. It is recommended to create a Model for each Controller. Below is an example model class that communicates with the database.
 
 ```
@@ -165,6 +196,8 @@ class AuthModel():
         
         return self.modelHelper.cursor_to_json(self.db.find(self.collection, where))
 ```
+
+### Core
 
 In the **core** folder, only code files that can be used in other projects that are not related to the developed project are defined, in which general operations are executed. For example, there is a class in which **MongoDB** queries are defined in the code below.
 
