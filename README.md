@@ -383,3 +383,24 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);
 
 ```
+
+### Shared
+
+Common components used in web pages are defined in the **shared** folder. For example, components such as sidebar, header, footer are in this folder. In addition, service classes that make requests to the API can also be defined in this folder.
+
+### Store
+
+Redux central state management library is used within the scope of the project. Thanks to Redux, data communication between components is managed from a central storage area and it is aimed to get rid of possible complexity. There are 3 different files in Redux, the codes are generally **Types**, **Action** and **Reducer**. Below is an example redux build.
+
+`authTypes.js`
+
+```
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_ERROR = "LOGIN_ERROR"
+
+export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
+export const SIGNUP_ERROR = "SIGNUP_ERROR";
+
+export const LOGOUT = "LOGOUT";
+```
+
