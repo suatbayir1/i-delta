@@ -6,6 +6,8 @@ I-DELTA is a ITEA 3 project that focuses on Distributed Ledger Technologies (DLT
 
 Within the scope of the I-Delta project, a REST API was developed using the **Python** language and the **Flask** framework. To run the API, you should go to the **/backend/app/controllers** folder and run the `python3 Api.py` command. 
 
+### Folder Structure
+
 The folder structure where the backend processes are located is created as follows. The development of the following folder structure will be welcomed, however, developers are also expected to comply with this structure as much as possible in terms of project integrity.
 
 ```
