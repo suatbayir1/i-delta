@@ -259,3 +259,70 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
+
+### Folder Structure
+
+```
+.
+├── App.js
+├── assets
+│   └── images
+│       ├── background.jpg
+│       ├── login.svg
+│       └── logo.png
+├── components
+│   ├── Auth
+│   │   └── Logout.js
+│   └── Home
+│       ├── LeftSideOperations.js
+│       ├── MiddleSequenceDiagram.js
+│       └── RightSideInformation.js
+├── config.js
+├── containers
+│   ├── Auth
+│   │   ├── SignIn.js
+│   │   └── SignUp.js
+│   └── Home
+│       ├── ExamplePage.js
+│       └── HomePage.js
+├── helpers
+├── history.js
+├── index.css
+├── index.js
+├── layouts
+│   ├── AuthLayout.js
+│   └── UserLayout.js
+├── reportWebVitals.js
+├── router
+│   └── PrivateRoute.js
+├── setupTests.js
+├── shared
+│   ├── components
+│   │   ├── Footer.js
+│   │   ├── Header.js
+│   │   └── Sidebar.js
+│   ├── constants
+│   │   ├── navigation.js
+│   │   ├── sampleData.js
+│   │   └── tips.js
+│   └── overlays
+│       ├── RegisterBC.js
+│       ├── RegisterSC.js
+│       └── RegisterWallet.js
+├── store
+│   ├── auth
+│   │   ├── authAction.js
+│   │   ├── authReducer.js
+│   │   └── authTypes.js
+│   ├── general
+│   │   ├── generalAction.js
+│   │   ├── generalReducer.js
+│   │   └── generalTypes.js
+│   ├── index.js
+│   ├── rootReducer.js
+│   └── store.js
+└── style
+    ├── SigninForm.scss
+    └── SignUpForm.scss
+
+```
