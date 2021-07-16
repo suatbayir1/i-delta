@@ -34,7 +34,11 @@ The folder structure where the backend processes are located is created as follo
     └── scripts
 ```
 
-There are constant values used in the project in the **config** folder. In the config folder, there are properties and response messages that should be present in requests to the API. In addition, confidential information such as passwords are kept here.
+### Config
+
+There are constant values used in the project in the **config** folder. In the config folder, there are properties and response messages that should be present in requests to the API. In addition, confidential information such as passwords are kept here. For example, the code below contains the `response_messages.py` file with the return responses.
+
+### Controllers
 
 Methods that respond to http requests are located in the controllers folder. The file named `Api.py` is the file that raises the service and the subclasses are collected in this file and routing is done. **AuthController** is the class where login and account creation are made and it is imported to **Api.py** file from outside and registered as a submodule. New classes to be added should be registered in the file named Api.py with this logic.
 
@@ -61,7 +65,38 @@ class Api(FlaskView, ApiBase):
 
 ```
 
-In the **helpers** folder, there are helper methods that perform general operations that will be used in many places during application development. It is expected that the new helper methods to be added will be defined in this folder.
+### Helpers
+
+In the **helpers** folder, there are helper methods that perform general operations that will be used in many places during application development. It is expected that the new helper methods to be added will be defined in this folder. An example helper method appears below.
+
+```
+def token_control(f=None, roles=None):
+    if not f:
+        return functools.partial(token_control, roles=roles)
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('token')
+
+        if not token:
+            return response(success = False, message = response_messages.token["not_found"], code = 403), 403
+
+        try:
+            data = jwt.decode(token, secret.authentication["SECRET_KEY"])
+            current_time = time.mktime((datetime.datetime.now()).timetuple())
+
+            if data["expiry_time"] > current_time:
+                if data["role"] in roles:
+                    return f(data)
+                else:
+                    return response(success = False, message = response_messages.token["authorization_error"], code = 401), 401
+            else:
+                return response(success = False, message = response_messages.token["token_expired"], code = 401), 401
+        except:
+            return response(data = [], success = False, message = response_messages.token["token_invalid"]), 401
+
+        return f(*args, **kwargs)
+    return decorated
+```
 
 In the **middlewares** folder, it is aimed to define the middlewares between the **Controller** and the **UI**, and to perform the necessary actions before the relevant method that will respond to the *HTTP* request works. For example, in the code below, a middleware named `ApiBase` is defined and methods are defined to control the json properties in the request and to standardize the JSON data returned in response.
 
