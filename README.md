@@ -102,6 +102,78 @@ class ApiBase():
         return params
 ```
 
+In the **models** folder, intermediary classes are defined to communicate with the database. It is aimed to carry out database codes in a separate layer due to the desire to write a cleaner code, to distinguish the operations performed from each other, and to provide easier maintenance against future problems. It is recommended to create a Model for each Controller. Below is an example model class that communicates with the database.
+
+```
+class AuthModel():
+    def __init__(self):
+        self.db = MongoDB()
+        self.collection = "users"
+        self.modelHelper = ModelHelper()
+
+    def add_user(self, payload):
+        is_user_exists = self.is_user_exists(payload["username"])
+
+        if not is_user_exists:
+            payload["password"] = generate_password_hash(payload["password"])
+            self.db.insert_one(self.collection, payload)
+            
+            return True
+        return False
+
+    def is_user_exists(self, username):
+        where = {
+            "username": username
+        }
+        
+        return self.modelHelper.cursor_to_json(self.db.find(self.collection, where))
+```
+
+In the **core** folder, only code files that can be used in other projects that are not related to the developed project are defined, in which general operations are executed. For example, there is a class in which **MongoDB** queries are defined in the code below.
+
+```
+class MongoDB():
+    def __init__(self):
+        self.client = MongoClient(secret.mongo["MONGO_URI"])
+        self.db = self.client[secret.mongo["DATABASE"]]
+
+    def find(self, collection, filter = {}):
+        return self.db[collection].find(filter)
+
+    def find_by_columns(self, collection, filter = {}, columns = {}):
+        return self.db[collection].find(filter, columns)
+
+    def find_skip_limit(self, collection, filter = {}, skip = 0, limit = 10):
+        return self.db[collection].find(filter).limit(limit).skip(skip)
+
+    def aggregate(self, collection, pipeline = []):
+        return self.db[collection].aggregate(pipeline)
+
+    def get_collection_list(self):
+        return self.db.collection_names()
+
+    def insert_one(self, collection, data):
+        return self.db[collection].insert_one(data)
+
+    def insert_many(self, collection, data):
+        return self.db[collection].insert_many(data)
+    
+    def update_one(self, collection, data, filter = {}, upsert = True):
+        return self.db[collection].update_one(filter, data, upsert)
+
+    def update_many(self, collection, data, filter = {}, upsert = True):
+        return self.db[collection].update_many(filter, data, upsert)
+
+    def delete_many(self, collection, filter = {}):
+        return self.db[collection].delete_many(filter)
+
+    def delete_one(self, collection, filter = {}):
+        return self.db[collection].delete_one(filter)
+
+    def count(self, collection, filter = {}):
+        return self.db[collection].find(filter).count()
+```
+
 ## UI
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
