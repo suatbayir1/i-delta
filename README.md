@@ -262,6 +262,8 @@ You will also see any lint errors in the console.
 
 ### Folder Structure
 
+The folder structure where the frontend processes are located is created as follows. The development of the following folder structure will be welcomed, however, developers are also expected to comply with this structure as much as possible in terms of project integrity.
+
 ```
 .
 ├── App.js
@@ -324,5 +326,60 @@ You will also see any lint errors in the console.
 └── style
     ├── SigninForm.scss
     └── SignUpForm.scss
+
+```
+### Assets
+
+There are external files such as images, logos and pdfs in the assets folder.
+
+### Components
+
+The components folder contains components used in web pages. Component structures are tried to be created as flexible as possible. In this way, it is aimed to use a developed component in several different places.
+
+### Containers
+
+In the **container** folder there are page frames that create web pages and assemble the necessary components. Containers created here are imported into the relevant Layout and accessed via route.
+
+### Router
+
+In the **router** folder, middlewares are defined for accessing the pages. For example, only users logged in to the web page can access the components requested in the `PrivateRoute.js` file below.
+
+```
+import React, { useEffect } from 'react'
+import { Redirect, Route } from 'react-router-dom'
+import { connect } from "react-redux";
+
+const PrivateRoute = ({ user, token, component: Component, ...rest }) => {
+
+    const isLoggedIn = token === "" ? false : true;
+
+    return (
+        <Route
+            {...rest}
+            render={props =>
+                isLoggedIn ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect to={{ pathname: '/sign-in', state: { from: props.location } }} />
+                )
+            }
+        />
+    )
+}
+
+
+const mapStateToProps = (state) => {
+    return {
+        token: state.auth.token,
+        user: state.auth.user,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {}
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);
 
 ```
