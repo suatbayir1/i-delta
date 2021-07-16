@@ -61,6 +61,8 @@ class Api(FlaskView, ApiBase):
 
 In the **helpers** folder, there are helper methods that perform general operations that will be used in many places during application development. It is expected that the new helper methods to be added will be defined in this folder.
 
+In the **middlewares** folder, it is aimed to define the middlewares between the **Controller** and the **UI**, and to perform the necessary actions before the relevant method that will respond to the *HTTP* request works.
+
 ## UI
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
