@@ -7,10 +7,12 @@ import { history } from "../history";
 
 // Components
 import { AppWrapper } from '@influxdata/clockface'
-import HomePage from '../containers/Home/HomePage';
+import Project from '../containers/Projects/Project';
 import ExamplePage from '../containers/Home/ExamplePage';
 import Sidebar from "../shared/components/Sidebar"
 import Logout from '../components/Auth/Logout';
+import Projects from '../containers/Projects/Projects';
+import AddProject from "../shared/overlays/AddProject";
 
 class UserLayout extends Component {
     render() {
@@ -23,7 +25,10 @@ class UserLayout extends Component {
                         <Switch>
                             <Route exact path="/example" component={ExamplePage} />
                             <Route exact path="/logout" component={Logout} />
-                            <Route exact path="/" component={HomePage} />
+                            <Route exact path="/my-projects" component={Projects} />
+                            <Route exact path="/add-project" component={AddProject} />
+                            <Route exact path="/project/:id" component={Project} />
+                            <Route exact path="/" component={ExamplePage} />
                         </Switch>
                     </Router>
                 </AppWrapper>

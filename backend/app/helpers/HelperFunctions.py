@@ -24,7 +24,7 @@ def token_control(f=None, roles=None):
     if not f:
         return functools.partial(token_control, roles=roles)
     @wraps(f)
-    def decorated(*args, **kwargs):
+    def decorated(self, *args, **kwargs):
         token = request.headers.get('token')
 
         if not token:
@@ -36,7 +36,7 @@ def token_control(f=None, roles=None):
 
             if data["expiry_time"] > current_time:
                 if data["role"] in roles:
-                    return f(data)
+                    return f(self, data)
                 else:
                     return response(success = False, message = response_messages.token["authorization_error"], code = 401), 401
             else:

@@ -14,6 +14,7 @@ import 'react-notifications/lib/notifications.css';
 import '@influxdata/clockface/dist/index.css';
 import './style/SigninForm.scss';
 import './style/SignUpForm.scss';
+import 'react-tabs/style/react-tabs.css';
 
 
 ReactDOM.render(

@@ -1,19 +1,27 @@
 // Libraries
 import React, { Component } from 'react'
+import { connect } from "react-redux";
 
 // Components
 import { Page, Grid, Columns, DapperScrollbars } from '@influxdata/clockface'
-import LeftSideOperations from "../../components/Home/LeftSideOperations";
-import MiddleSequenceDiagram from "../../components/Home/MiddleSequenceDiagram";
-import RightSideInformation from "../../components/Home/RightSideInformation";
+import LeftSideOperations from "../../components/Project/LeftSideOperations";
+import MiddleSequenceDiagram from "../../components/Project/MiddleSequenceDiagram";
+import RightSideInformation from "../../components/Project/RightSideInformation";
 
-class HomePage extends Component {
+// Actions
+import { fetchGetProject } from "../../store"
+
+class Project extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             sequenceDiagramText: ``,
         }
+    }
+
+    componentDidMount = async () => {
+        await this.props.fetchGetProject({ "id": this.props.match.params.id })
     }
 
     handleChangeSequenceDiagram = (text) => {
@@ -26,7 +34,7 @@ class HomePage extends Component {
         return (
             <Page>
                 <Page.Header fullWidth={true}>
-                    <Page.Title title={"Home Page"} />
+                    <Page.Title title={`Project - ${this.props.selectedProject[0].projectName}`} />
                 </Page.Header>
 
 
@@ -79,4 +87,16 @@ class HomePage extends Component {
     }
 }
 
-export default HomePage;
+const mapStateToProps = (state) => {
+    return {
+        selectedProject: state.project.selectedProject
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchGetProject: (payload) => dispatch(fetchGetProject(payload)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Project);

@@ -2,12 +2,12 @@
 import React, { Component } from 'react'
 import * as d3 from "d3";
 
-
 // Components
 import {
     Panel, Form, ComponentSize, Grid, Columns,
     ComponentColor, IconFont, Button, ButtonType, FlexBox,
 } from '@influxdata/clockface'
+import ActionTabs from "./ActionTabs";
 
 class MiddleSequenceDiagram extends Component {
     constructor(props) {
@@ -144,14 +144,7 @@ class MiddleSequenceDiagram extends Component {
                         <Grid>
                             <Grid.Row>
                                 <Grid.Column widthXS={Columns.Twelve}>
-                                    <div style={{ float: 'right' }}>
-                                        <Button
-                                            text="Action"
-                                            icon={IconFont.Shuffle}
-                                            type={ButtonType.Button}
-                                            color={ComponentColor.Primary}
-                                        />
-                                    </div>
+                                    <ActionTabs />
                                 </Grid.Column>
                             </Grid.Row>
                         </Grid>
@@ -182,7 +175,13 @@ class MiddleSequenceDiagram extends Component {
                                         color={ComponentColor.Primary}
                                     />
                                     <Button
-                                        text="Close"
+                                        text="Save Action"
+                                        icon={IconFont.Checkmark}
+                                        type={ButtonType.Button}
+                                        color={ComponentColor.Success}
+                                    />
+                                    <Button
+                                        text="Delete Action"
                                         icon={IconFont.Remove}
                                         type={ButtonType.Button}
                                         color={ComponentColor.Danger}

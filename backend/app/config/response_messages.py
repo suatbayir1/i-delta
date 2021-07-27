@@ -22,3 +22,37 @@ token = dict(
     token_expired = "Token expired",
     token_invalid = "Token invalid",
 )
+
+# PROJECT
+add_project = dict(
+    already_exists = "This project name already exists",
+    success = "Project created successfully",
+)
+
+get_projects = dict(
+    success = "Project list successfully fetched"
+)
+
+delete_project = dict(
+    success = "Project deleted successfully",
+    error = "An error occurred while deleting the project",
+)
+
+clone_project = dict(
+    success = "Project successfully cloned",
+)
+
+update_project = dict(
+    success = "Project updated successfully",
+    error = "An error occurred while updating the project",
+)
+
+getById_project = dict(
+    success = "Project detail received successfully"
+)
+
+# ACTION
+add_action = dict(
+    success = "Action created successfully",
+    already_exists = "This action name already exists",
+)

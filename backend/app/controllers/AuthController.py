@@ -29,8 +29,11 @@ class AuthController(FlaskView, ApiBase):
                 return ApiBase.response(self, message = response_messages.signIn["not_found"]), 404
 
             if check_password_hash(user_data[0]["password"], payload["password"]):
+                print(user_data)
+
                 token = jwt.encode({
                     "username": user_data[0]["username"],
+                    "userID": user_data[0]["_id"]["$oid"],
                     "role": user_data[0]["role"],
                     "expiry_time": time.mktime((datetime.datetime.now() + datetime.timedelta(days=1)).timetuple())
                 }, secret.authentication["SECRET_KEY"])
