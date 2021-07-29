@@ -244,6 +244,17 @@ class MongoDB():
         return self.db[collection].find(filter).count()
 ```
 
+## Dependencies
+
+**mongodb :** https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
+**pymongo :** ```pip install pymongo```
+
+**material-ui library :** ```npm install @material-ui/core```
+
+Before you start running the frontend make sure to run this command in ```/backend/app/controllers``` directory : ```python3 Api.py```
+
+
 ## UI
 
 In the UI part of the project, the **React.js** library and the **clockface** component library developed by influxdata are used.
