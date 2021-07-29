@@ -12,5 +12,11 @@ project = dict(
 )
 
 action = dict(
-    add = ["actionName", "projectID"]
+    add = ["actionName", "projectID", "transactions"],
+    get = ["projectID"],
+    delete = ["id"],
+)
+
+transaction = dict(
+    add = ["actionID", "source", "target", "transactionMessage"],
 )

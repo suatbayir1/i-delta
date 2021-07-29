@@ -56,3 +56,17 @@ add_action = dict(
     success = "Action created successfully",
     already_exists = "This action name already exists",
 )
+
+get_action = dict(
+    success = "Action list successfully fetched"
+)
+
+delete_action = dict(
+    success = "Action deleted successfully",
+    error = "An error occurred while deleting the action",
+)
+
+# TRANSACTION
+add_transaction = dict(
+    success = "Transaction created successfully"
+)

@@ -11,6 +11,7 @@ import {
 import RegisterBC from "../../shared/overlays/RegisterBC";
 import RegisterSC from "../../shared/overlays/RegisterSC";
 import RegisterWallet from "../../shared/overlays/RegisterWallet";
+import AddTransaction from "../../shared/overlays/AddTransaction";
 
 // Notifications
 import { NotificationManager } from 'react-notifications';
@@ -23,6 +24,7 @@ class LeftSideOperations extends Component {
             visibleRegisterBC: false,
             visibleRegisterSC: false,
             visibleRegisterWallet: false,
+            visibleAddTransaction: false,
         }
     }
 
@@ -35,13 +37,14 @@ class LeftSideOperations extends Component {
     }
 
     render() {
-        const { visibleRegisterBC, visibleRegisterSC, visibleRegisterWallet } = this.state;
+        const { visibleRegisterBC, visibleRegisterSC, visibleRegisterWallet, visibleAddTransaction } = this.state;
 
         return (
             <>
                 <RegisterBC visible={visibleRegisterBC} dismissOverlay={this.dismissOverlay} />
                 <RegisterSC visible={visibleRegisterSC} dismissOverlay={this.dismissOverlay} />
                 <RegisterWallet visible={visibleRegisterWallet} dismissOverlay={this.dismissOverlay} />
+                <AddTransaction visible={visibleAddTransaction} dismissOverlay={this.dismissOverlay} />
 
                 <Panel>
                     <Panel.Header size={ComponentSize.ExtraSmall}>
@@ -160,7 +163,7 @@ class LeftSideOperations extends Component {
                                             icon={IconFont.Plus}
                                             type={ButtonType.Button}
                                             color={ComponentColor.Success}
-                                            onClick={this.todo}
+                                            onClick={() => { this.setState({ visibleAddTransaction: true }) }}
                                         />
                                     </Form.Element>
                                 </Grid.Column>

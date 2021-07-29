@@ -9,7 +9,7 @@ import MiddleSequenceDiagram from "../../components/Project/MiddleSequenceDiagra
 import RightSideInformation from "../../components/Project/RightSideInformation";
 
 // Actions
-import { fetchGetProject } from "../../store"
+import { fetchGetProject, fetchGetActions } from "../../store"
 
 class Project extends Component {
     constructor(props) {
@@ -22,6 +22,7 @@ class Project extends Component {
 
     componentDidMount = async () => {
         await this.props.fetchGetProject({ "id": this.props.match.params.id })
+        await this.props.fetchGetActions({ "projectID": this.props.match.params.id })
     }
 
     handleChangeSequenceDiagram = (text) => {
@@ -96,6 +97,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchGetProject: (payload) => dispatch(fetchGetProject(payload)),
+        fetchGetActions: (payload) => dispatch(fetchGetActions(payload)),
     };
 };
 

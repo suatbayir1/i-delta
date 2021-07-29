@@ -9,6 +9,7 @@ from flask_cors import CORS
 from app.controllers.AuthController import AuthController
 from app.controllers.ProjectController import ProjectController 
 from app.controllers.ActionController import ActionController
+from app.controllers.TransactionController import TransactionController
 
 class Api(FlaskView, ApiBase):
     def __init__(self):
@@ -30,4 +31,5 @@ if __name__ == "__main__":
     AuthController.register(app, route_base = '/api/auth/')
     ProjectController.register(app, route_base = '/api/project/')
     ActionController.register(app, route_base = '/api/action/')
+    TransactionController.register(app, route_base = '/api/transaction/')
     app.run(debug = True, port = 9632)

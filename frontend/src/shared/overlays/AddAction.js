@@ -26,7 +26,7 @@ class AddAction extends Component {
         }
     }
 
-    addProject = async () => {
+    addAction = async () => {
         const { actionName } = this.state;
         const { selectedProject } = this.props;
 
@@ -36,6 +36,7 @@ class AddAction extends Component {
         }
 
         const payload = {
+            "transactions": [],
             "projectID": selectedProject[0]['_id']['$oid'],
             "actionName": actionName
         }
@@ -85,7 +86,7 @@ class AddAction extends Component {
                                     icon={IconFont.Checkmark}
                                     color={ComponentColor.Success}
                                     type={ButtonType.Submit}
-                                    onClick={this.addProject}
+                                    onClick={this.addAction}
                                 />
                             </Form.Footer>
                         </Form>

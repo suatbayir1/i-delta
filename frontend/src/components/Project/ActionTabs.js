@@ -1,6 +1,7 @@
 // Libraries
 import React, { Component } from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { connect } from "react-redux";
 
 // Components
 import {
@@ -8,17 +9,37 @@ import {
 } from '@influxdata/clockface'
 import AddAction from "../../shared/overlays/AddAction";
 
+// Actions
+import { setSelectedAction } from "../../store/"
+
+
 class ActionTabs extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             visibleAddAction: false,
+            selectedIndex: 0,
         }
     }
 
-    handleChangeAction = (index) => {
-        console.log(index);
+    componentDidUpdate = async (prevProps) => {
+        const { actions, setSelectedAction, selectedProject } = this.props;
+        const { selectedIndex } = this.state;
+
+        if (prevProps.selectedProject !== selectedProject) {
+            await setSelectedAction(actions[0]);
+        }
+
+        if (prevProps.actions !== actions) {
+            await setSelectedAction(actions[selectedIndex]);
+        }
+    }
+
+    handleChangeAction = async (index) => {
+        const { actions, setSelectedAction } = this.props;
+        this.setState({ selectedIndex: index });
+        await setSelectedAction(actions[index]);
     }
 
     dismissOverlay = () => {
@@ -27,6 +48,7 @@ class ActionTabs extends Component {
 
     render() {
         const { visibleAddAction } = this.state;
+        const { actions } = this.props;
 
         return (
             <>
@@ -34,15 +56,18 @@ class ActionTabs extends Component {
 
                 <Tabs onSelect={index => this.handleChangeAction(index)}>
                     <TabList>
-                        <Tab>Action 1</Tab>
-                        <Tab>Action 2</Tab>
-                        <Tab>Action 3</Tab>
-                        <Tab>Action 4</Tab>
-                        <Tab>Action 5</Tab>
-                        <Tab>Action 6</Tab>
-                        <Tab>Action 7</Tab>
-                        <Tab>Action 8</Tab>
-
+                        {
+                            actions.map((action, idx) => {
+                                return (
+                                    <Tab
+                                        key={idx}
+                                        style={{ width: '100px', borderRight: '2px solid #aaa' }}
+                                    >
+                                        {action.actionName}
+                                    </Tab>
+                                )
+                            })
+                        }
                         <Button
                             style={{ marginLeft: '10px' }}
                             size={ComponentSize.Small}
@@ -54,34 +79,30 @@ class ActionTabs extends Component {
                         />
                     </TabList>
 
-                    <TabPanel>
-                        <h2>content 1</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 2</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 3</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 4</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 5</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 6</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 7</h2>
-                    </TabPanel>
-                    <TabPanel>
-                        <h2>content 8</h2>
-                    </TabPanel>
+                    {
+                        actions.map((action, idx) => {
+                            return (
+                                <TabPanel key={idx}>
+                                </TabPanel>)
+                        })
+                    }
                 </Tabs>
             </>
         )
     }
 }
 
-export default ActionTabs;
+const mapStateToProps = (state) => {
+    return {
+        actions: state.action.actions,
+        selectedProject: state.project.selectedProject
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSelectedAction: (payload) => dispatch(setSelectedAction(payload)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActionTabs);
