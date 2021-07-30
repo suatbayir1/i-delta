@@ -22,9 +22,12 @@ class RightSideInformation extends Component {
         const { selectedAction } = this.props;
         let text = "";
 
-        selectedAction?.transactions.map((transaction, idx) => {
-            text += ` ${idx + 1} - ${transaction.source.name} ==> ${transaction.target.name} : ${transaction.transactionMessage}\n`
-        })
+        if (selectedAction !== undefined && selectedAction.transaction !== undefined) {
+            selectedAction?.transactions.map((transaction, idx) => {
+                text += ` ${idx + 1} - ${transaction.source.name} ==> ${transaction.target.name} : ${transaction.transactionMessage}\n`
+            })
+        }
+
         return text;
     }
 
