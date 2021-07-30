@@ -1,6 +1,5 @@
 // Libraries
 import React, { Component } from 'react'
-// import * as d3 from "d3";
 import { connect } from "react-redux";
 
 // Components
@@ -155,17 +154,7 @@ class MiddleSequenceDiagram extends Component {
                     .attr('width', width)
                     .attr('height', height)
                     .style(style.rect.mouseout)
-                    .on("click", function (d, i) {
-                        console.log(d);
-                        switch (d.id) {
-                            case "delete":
-                                thisCopy.handleDeleteTransaction(m);
-                                break;
-                            case "second":
-                                alert("A new action to be added")
-                                break;
-                        }
-                    })
+                    .on("click", (d, i) => { handleMenuActions(d, m) })
 
                 d3.selectAll('.menu-entry')
                     .append('text')
@@ -175,23 +164,29 @@ class MiddleSequenceDiagram extends Component {
                     .attr('dy', height - margin / 2)
                     .attr('dx', margin)
                     .style(style.text)
-                    .on("click", function (d, i) {
-                        console.log(d);
-                        switch (d.id) {
-                            case "delete":
-                                thisCopy.handleDeleteTransaction(m);
-                                break;
-                            case "second":
-                                alert("A new action to be added")
-                                break;
-                        }
-                    })
+                    .on("click", (d, i) => { handleMenuActions(d, m) })
 
                 // Other interactions
                 d3.select('body')
                     .on('click', function () {
                         d3.select('.context-menu').remove();
                     });
+
+                function handleMenuActions(d, m) {
+                    console.log(d, m);
+                    switch (d.id) {
+                        case "delete":
+                            thisCopy.handleDeleteTransaction(m);
+                            break;
+                        case "second":
+                            alert("A new action to be added")
+                            break;
+                        case "classDetail":
+                            alert("TODO: Detail overlay will be create")
+                            break;
+                    }
+                }
+
             }
 
             menu.items = function (e) {
@@ -233,16 +228,32 @@ class MiddleSequenceDiagram extends Component {
             { id: "second", text: "Second Action" },
         );
 
+        var classMenu = contextMenu().items(
+            { id: 'classDetail', text: 'Class Detail' },
+            { id: 'action1', text: 'Action 1' },
+            { id: 'action2', text: 'Action 2' },
+            { id: 'action3', text: 'Action 3' },
+        )
+
         // Create an svg canvas
         var svg = d3.select("#drawArea")
             .append("svg")
             .attr("width", CANVAS_WIDTH)
             .attr("height", CANVAS_HEIGHT)
 
+        // var zoom = d3.behavior.zoom()
+        //     .scaleExtent([1, 8])
+        //     .on("zoom", function () {
+        //         svg.attr("transform", "translate(" + d3.event.translate.join(",") + ")")
+        //     });
+
+        // svg.call(zoom)
 
         update();
 
         function update() {
+
+
             // Draw vertical lines
             var line = svg.selectAll("line")
                 .data(classes)
@@ -271,6 +282,10 @@ class MiddleSequenceDiagram extends Component {
                     })
                     .on("mousedown", () => { handleRectangleClick(c) })
                     .on("mouseover", changeCursorToPointer)
+                    .on('contextmenu', function () {
+                        d3.event.preventDefault();
+                        classMenu(d3.mouse(this)[0] + x, d3.mouse(this)[1] + YPAD, c);
+                    })
             });
 
             // Draw class labels
@@ -288,6 +303,10 @@ class MiddleSequenceDiagram extends Component {
                     .attr("dy", CLASS_LABEL_Y_OFFSET)
                     .on("mousedown", () => { handleRectangleClick(c) })
                     .on("mouseover", changeCursorToPointer)
+                    .on('contextmenu', function () {
+                        d3.event.preventDefault();
+                        classMenu(d3.mouse(this)[0] + x, d3.mouse(this)[1] + YPAD, c);
+                    })
             });
 
             // Draw message arrows
@@ -371,6 +390,8 @@ class MiddleSequenceDiagram extends Component {
             selected_node = null;
             update();
         }
+
+
     }
 
 
@@ -524,13 +545,6 @@ class MiddleSequenceDiagram extends Component {
                                         type={ButtonType.Button}
                                         color={ComponentColor.Primary}
                                     />
-                                    {/* <Button
-                                        text="Save Action"
-                                        icon={IconFont.Checkmark}
-                                        type={ButtonType.Button}
-                                        color={ComponentColor.Success}
-                                    /> */}
-
                                     <ConfirmationButton
                                         icon={IconFont.Remove}
                                         size={ComponentSize.Small}
