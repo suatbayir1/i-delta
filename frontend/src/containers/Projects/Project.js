@@ -17,6 +17,7 @@ class Project extends Component {
 
         this.state = {
             sequenceDiagramText: ``,
+            selectedLink: {},
         }
     }
 
@@ -29,13 +30,27 @@ class Project extends Component {
         this.setState({ sequenceDiagramText: text });
     }
 
+    handleClickLink = (selectedLink) => {
+        console.log("selectedArrow", selectedLink);
+        this.setState({ selectedLink })
+    }
+
+    handleDeleteTransaction = () => {
+        const { selectedLink } = this.state;
+        console.log("clicked delete transaction", selectedLink);
+    }
+
     render() {
         const { sequenceDiagramText } = this.state;
 
         return (
             <Page>
                 <Page.Header fullWidth={true}>
-                    <Page.Title title={`Project - ${this.props.selectedProject[0].projectName}`} />
+                    <Page.Title
+                        title={this.props.selectedProject.length > 0
+                            ? `Project - ${this.props.selectedProject[0].projectName}`
+                            : 'Project'}
+                    />
                 </Page.Header>
 
 
@@ -56,7 +71,9 @@ class Project extends Component {
                                     widthLG={Columns.Two}
                                     style={{ marginTop: '20px' }}
                                 >
-                                    <LeftSideOperations />
+                                    <LeftSideOperations
+                                        handleDeleteTransaction={this.handleDeleteTransaction}
+                                    />
                                 </Grid.Column>
                                 <Grid.Column
                                     widthXS={Columns.Twelve}
@@ -65,7 +82,10 @@ class Project extends Component {
                                     widthLG={Columns.Seven}
                                     style={{ marginTop: '20px' }}
                                 >
-                                    <MiddleSequenceDiagram sequenceDiagramText={sequenceDiagramText} />
+                                    <MiddleSequenceDiagram
+                                        sequenceDiagramText={sequenceDiagramText}
+                                        handleClickLink={this.handleClickLink}
+                                    />
                                 </Grid.Column>
                                 <Grid.Column
                                     widthXS={Columns.Twelve}

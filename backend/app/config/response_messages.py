@@ -70,3 +70,7 @@ delete_action = dict(
 add_transaction = dict(
     success = "Transaction created successfully"
 )
+
+ddelete_transaction = dict(
+    success = "Transaction deleted successfully"
+)

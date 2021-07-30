@@ -27,4 +27,5 @@ export {
 
 export {
     fetchAddTransaction,
+    fetchDeleteTransaction,
 } from "./transaction/transactionAction";

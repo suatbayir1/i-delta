@@ -11,17 +11,34 @@ import {
 import ActionTabs from "./ActionTabs";
 
 // Actions
-import { fetchDeleteAction } from "../../store/";
+import { fetchDeleteAction, fetchDeleteTransaction } from "../../store/";
 
 // Assets
-import "../../assets/css/sequenceDiagram.css";
+import styles from "../../assets/css/sequenceDiagram.module.css";
+
+// Graph global variables
+var d3 = window.d3;
+var XPAD = 50;
+var YPAD = 20;
+var VERT_SPACE = 100;
+var VERT_PAD = 60;
+var CLASS_WIDTH = 80;
+var CLASS_HEIGHT = 40;
+var CLASS_LABEL_X_OFFSET = -25;
+var CLASS_LABEL_Y_OFFSET = 25;
+var MESSAGE_SPACE = 50;
+var MESSAGE_LABEL_X_OFFSET = -40;
+var MESSAGE_LABEL_Y_OFFSET = 70;
+var MESSAGE_ARROW_Y_OFFSET = 80;
+var CANVAS_WIDTH = 800;
+var CANVAS_HEIGHT = 600;
+var selected_link, selected_node;
 
 class MiddleSequenceDiagram extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            // classes: ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F", "Class G"],
             classes: [
                 { id: "classA", name: "Class A", prop1: 'prop1', prop2: 'prop2' },
                 { id: "classB", name: "Class B", prop1: 'prop1', prop2: 'prop2' },
@@ -30,16 +47,6 @@ class MiddleSequenceDiagram extends Component {
                 { id: "classE", name: "Class E", prop1: 'prop1', prop2: 'prop2' },
                 { id: "classF", name: "Class F", prop1: 'prop1', prop2: 'prop2' },
                 { id: "classG", name: "Class G", prop1: 'prop1', prop2: 'prop2' },
-            ],
-            messages: [
-                { start: 0, end: 2, message: "From A to C" },
-                { start: 2, end: 3, message: "From C to D" },
-                { start: 3, end: 4, message: "From D to E" },
-                { start: 4, end: 3, message: "From E to D" },
-                { start: 3, end: 6, message: "From D to G" },
-                { start: 6, end: 3, message: "From G to D" },
-                { start: 3, end: 2, message: "From D to C" },
-                { start: 2, end: 0, message: "From C to A" }
             ],
         }
     }
@@ -72,10 +79,10 @@ class MiddleSequenceDiagram extends Component {
                     if (cl.id === transaction.target.id) {
                         message["end"] = idx;
                     }
-
-                    message["message"] = transaction.transactionMessage;
                 })
 
+                message["message"] = transaction.transactionMessage;
+                message["id"] = transaction.id;
                 return message;
             })
             : [];
@@ -84,31 +91,147 @@ class MiddleSequenceDiagram extends Component {
         this.createSequenceDiagram(classes, messages);
     }
 
+    handleDeleteTransaction = async (transaction) => {
+        const { fetchDeleteTransaction, selectedAction } = this.props;
+
+        const payload = {
+            "actionID": selectedAction["_id"]["$oid"],
+            "transactionID": transaction["id"]["$uuid"]
+        }
+
+        await fetchDeleteTransaction(payload);
+    }
+
     createSequenceDiagram = (classes, messages) => {
-        var d3 = window.d3;
         d3.selectAll("svg").remove();
 
-        console.log("d3", d3);
+        var thisCopy = this;
 
-        var XPAD = 50;
-        var YPAD = 20;
-        var VERT_SPACE = 100;
-        var VERT_PAD = 60;
+        function contextMenu() {
+            var height,
+                width,
+                margin = 0.1, // fraction of width
+                items = [],
+                rescale = false,
+                style = {
+                    'rect': {
+                        'mouseout': {
+                            'fill': 'rgb(244,244,244)',
+                            'stroke': 'white',
+                            'stroke-width': '1px'
+                        },
+                        'mouseover': {
+                            'fill': 'rgb(200,200,200)'
+                        }
+                    },
+                    'text': {
+                        'fill': 'steelblue',
+                        'font-size': '13'
+                    }
+                };
 
-        var CLASS_WIDTH = 80;
-        var CLASS_HEIGHT = 40;
-        var CLASS_LABEL_X_OFFSET = -25;
-        var CLASS_LABEL_Y_OFFSET = 25;
+            function menu(x, y, m) {
+                d3.select('.context-menu').remove();
+                scaleItems();
 
-        var MESSAGE_SPACE = 50;
-        var MESSAGE_LABEL_X_OFFSET = -40;
-        var MESSAGE_LABEL_Y_OFFSET = 70;
-        var MESSAGE_ARROW_Y_OFFSET = 80;
+                // Draw the menu
+                d3.select('svg')
+                    .append('g').attr('class', 'context-menu')
+                    .selectAll('tmp')
+                    .data(items).enter()
+                    .append('g').attr('class', 'menu-entry')
+                    .style({ 'cursor': 'pointer' })
+                    .on('mouseover', function () {
+                        d3.select(this).select('rect').style(style.rect.mouseover)
+                    })
+                    .on('mouseout', function () {
+                        d3.select(this).select('rect').style(style.rect.mouseout)
+                    });
 
-        var CANVAS_WIDTH = 800;
-        var CANVAS_HEIGHT = 600;
+                d3.selectAll('.menu-entry')
+                    .append('rect')
+                    .attr('x', x)
+                    .attr('y', function (d, i) { return y + (i * height); })
+                    .attr('width', width)
+                    .attr('height', height)
+                    .style(style.rect.mouseout)
+                    .on("click", function (d, i) {
+                        console.log(d);
+                        switch (d.id) {
+                            case "delete":
+                                thisCopy.handleDeleteTransaction(m);
+                                break;
+                            case "second":
+                                alert("A new action to be added")
+                                break;
+                        }
+                    })
 
-        var selected_link;
+                d3.selectAll('.menu-entry')
+                    .append('text')
+                    .text(function (d) { return d.text; })
+                    .attr('x', x)
+                    .attr('y', function (d, i) { return y + (i * height); })
+                    .attr('dy', height - margin / 2)
+                    .attr('dx', margin)
+                    .style(style.text)
+                    .on("click", function (d, i) {
+                        console.log(d);
+                        switch (d.id) {
+                            case "delete":
+                                thisCopy.handleDeleteTransaction(m);
+                                break;
+                            case "second":
+                                alert("A new action to be added")
+                                break;
+                        }
+                    })
+
+                // Other interactions
+                d3.select('body')
+                    .on('click', function () {
+                        d3.select('.context-menu').remove();
+                    });
+            }
+
+            menu.items = function (e) {
+                if (!arguments.length) return items;
+                for (let i in arguments) items.push(arguments[i]);
+                rescale = true;
+                return menu;
+            }
+
+            // Automatically set width, height, and margin;
+            function scaleItems() {
+                if (rescale) {
+                    d3.select('svg').selectAll('tmp')
+                        .data(items).enter()
+                        .append('text')
+                        .text(function (d) { return d; })
+                        .style(style.text)
+                        .attr('x', -1000)
+                        .attr('y', -1000)
+                        .attr('class', 'tmp');
+                    var z = d3.selectAll('.tmp')[0]
+                        .map(function (x) { return x.getBBox(); });
+                    width = d3.max(z.map(function (x) { return x.width; }));
+                    margin = margin * width;
+                    width = width + 2 * margin;
+                    height = d3.max(z.map(function (x) { return x.height + margin / 2; }));
+
+                    // cleanup
+                    d3.selectAll('.tmp').remove();
+                    rescale = false;
+                }
+            }
+
+            return menu;
+        }
+
+        var linkMenu = contextMenu().items(
+            { id: "delete", text: "Delete Link" },
+            { id: "second", text: "Second Action" },
+        );
 
         // Create an svg canvas
         var svg = d3.select("#drawArea")
@@ -116,11 +239,10 @@ class MiddleSequenceDiagram extends Component {
             .attr("width", CANVAS_WIDTH)
             .attr("height", CANVAS_HEIGHT)
 
+
         update();
 
         function update() {
-
-
             // Draw vertical lines
             var line = svg.selectAll("line")
                 .data(classes)
@@ -132,40 +254,41 @@ class MiddleSequenceDiagram extends Component {
                 .attr("x2", function (d, i) { return XPAD + i * VERT_SPACE; })
                 .attr("y2", YPAD + VERT_PAD + messages.length * MESSAGE_SPACE)
 
-            // Draw rectangles
-            var g1 = svg.selectAll("rect")
-                .data(classes)
-                .enter()
-                .append("g")
-                .attr("transform", function (d, i) {
-                    return "translate(" + (XPAD + i * VERT_SPACE) + "," + YPAD + ")";
-                })
-                .attr("class", "first")
+            // Draw classes
+            classes.forEach(function (c, i) {
+                var x = XPAD + i * VERT_SPACE;
+                var g1 = svg.append("g")
+                    .attr("transform", "translate(" + x + "," + YPAD + ")")
+                    .attr("class", "first")
 
-            g1.append("rect")
-                .attr("width", CLASS_WIDTH)
-                .attr("height", CLASS_HEIGHT)
-                .attr("x", -CLASS_WIDTH / 2)
-                .attr("y", 0)
-                .attr("fill", "#CCC")
-                .on("mousedown", handleRectangleClick)
-                .on("mouseover", changeCursorToPointer)
+                g1.append("rect")
+                    .attr("width", CLASS_WIDTH)
+                    .attr("height", CLASS_HEIGHT)
+                    .attr("x", -CLASS_WIDTH / 2)
+                    .attr("y", 0)
+                    .attr("fill", function (d) {
+                        return c === selected_node ? "#FF0000" : "#CCC"
+                    })
+                    .on("mousedown", () => { handleRectangleClick(c) })
+                    .on("mouseover", changeCursorToPointer)
+            });
 
             // Draw class labels
-            var g1 = svg.selectAll("text")
-                .data(classes)
-                .enter()
-                .append("g")
-                .attr("transform", function (d, i) {
-                    return "translate(" + (XPAD + i * VERT_SPACE) + "," + YPAD + ")";
-                })
-                .attr("class", "first")
-                .append("text")
-                .text(function (d) { return d.name; })
-                .attr("dx", CLASS_LABEL_X_OFFSET)
-                .attr("dy", CLASS_LABEL_Y_OFFSET)
-                .on("mousedown", handleRectangleClick)
-                .on("mouseover", changeCursorToPointer)
+            classes.forEach(function (c, i) {
+                var x = XPAD + i * VERT_SPACE;
+                var g1 = svg.append("g")
+                    .attr("transform", "translate(" + x + "," + YPAD + ")")
+                    .attr("class", "first")
+                    .append("text")
+                    .text(function (d) { return c.name; })
+                    .attr("fill", function (d) {
+                        return c === selected_node ? "#FFFFFF" : "#000"
+                    })
+                    .attr("dx", CLASS_LABEL_X_OFFSET)
+                    .attr("dy", CLASS_LABEL_Y_OFFSET)
+                    .on("mousedown", () => { handleRectangleClick(c) })
+                    .on("mouseover", changeCursorToPointer)
+            });
 
             // Draw message arrows
             messages.forEach(function (m, i) {
@@ -177,14 +300,18 @@ class MiddleSequenceDiagram extends Component {
                     .attr("stroke-width", 2)
                     .on("mousedown", () => { handleLineClick(m) })
                     .on("mouseover", changeCursorToPointer)
+                    .on('contextmenu', function () {
+                        d3.event.preventDefault();
+                        linkMenu(d3.mouse(this)[0], d3.mouse(this)[1], m);
+                    })
                     .attr("x1", XPAD + m.start * VERT_SPACE)
                     .attr("y1", y)
                     .attr("x2", XPAD + m.end * VERT_SPACE)
                     .attr("y2", y)
                     .attr("marker-end", "url(#end)")
                     .append("text")
-                    .style("fill", "#CCC")
                     .text(function (d) { return m.message; })
+
             });
 
 
@@ -197,11 +324,16 @@ class MiddleSequenceDiagram extends Component {
                     .attr("transform", "translate(" + xPos + "," + yPos + ")")
                     .attr("class", "first")
                     .append("text")
-                    .style('fill', '#CCC')
+                    .style('fill', function () {
+                        return "#CCC"
+                    })
                     .text(function (d) { return m.message; })
                     .on("mousedown", () => { handleLineClick(m) })
                     .on("mouseover", changeCursorToPointer)
-
+                    .on('contextmenu', function () {
+                        d3.event.preventDefault();
+                        linkMenu(d3.mouse(this)[0] + xPos, d3.mouse(this)[1] + yPos, m);
+                    });
             });
 
             // Arrow style
@@ -213,24 +345,30 @@ class MiddleSequenceDiagram extends Component {
                 .attr("refX", 10)
                 .attr("refY", 0)
                 .attr("markerWidth", 10)
-                .attr("markerHeight", 10)
+                .attr("markerHeight", 5)
                 .attr("orient", "auto")
                 .append("svg:path")
                 .attr("d", "M0,-5L10,0L0,5")
-                .style("fill", '#CCC');
+                .style("fill", function (d) {
+                    return '#FF0000'
+                });
         }
 
         function handleRectangleClick(d) {
-            console.log("clicked", d);
+            selected_node = d;
+            selected_link = null;
+            update();
         }
 
         function changeCursorToPointer(d) {
             d3.select(this).style("cursor", "pointer");
         }
 
+        let vm = this;
         function handleLineClick(m) {
-            console.log(m);
+            vm.props.handleClickLink(m);
             selected_link = m;
+            selected_node = null;
             update();
         }
     }
@@ -239,8 +377,6 @@ class MiddleSequenceDiagram extends Component {
     // createSequenceDiagram = (classes, messages) => {
     //     var d3 = window.d3;
     //     d3.selectAll("svg").remove();
-
-    //     console.log("d3", d3);
 
     //     var XPAD = 50;
     //     var YPAD = 20;
@@ -290,7 +426,6 @@ class MiddleSequenceDiagram extends Component {
     //             .attr("y", 0)
     //             .attr("fill", "#CCC")
     //             .on("mousedown", function (d) {
-    //                 console.log(d);
     //             })
     //     });
 
@@ -389,12 +524,12 @@ class MiddleSequenceDiagram extends Component {
                                         type={ButtonType.Button}
                                         color={ComponentColor.Primary}
                                     />
-                                    <Button
+                                    {/* <Button
                                         text="Save Action"
                                         icon={IconFont.Checkmark}
                                         type={ButtonType.Button}
                                         color={ComponentColor.Success}
-                                    />
+                                    /> */}
 
                                     <ConfirmationButton
                                         icon={IconFont.Remove}
@@ -428,6 +563,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchDeleteAction: (payload) => dispatch(fetchDeleteAction(payload)),
+        fetchDeleteTransaction: (payload) => dispatch(fetchDeleteTransaction(payload)),
     };
 };
 

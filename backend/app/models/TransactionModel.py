@@ -3,7 +3,6 @@ from core.databases.MongoDB import MongoDB
 from bson.json_util import loads, dumps
 from app.helpers.ModelHelper import ModelHelper
 from bson import ObjectId
-import uuid
 
 class TransactionModel():
     def __init__(self):
@@ -23,6 +22,20 @@ class TransactionModel():
                 '$push': {'transactions': payload}
             }
 
+            return self.db.update_one(self.collection, update_data, where)
+        except:
+            return False
+
+    def delete(self, payload):
+        try:
+            where = {
+                "_id": ObjectId(payload["actionID"])
+            }
+
+            update_data = {
+                '$pull': {'transactions': {"id": payload["transactionID"]}}
+            }
+            
             return self.db.update_one(self.collection, update_data, where)
         except:
             return False

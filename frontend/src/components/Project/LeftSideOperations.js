@@ -177,7 +177,7 @@ class LeftSideOperations extends Component {
                                             icon={IconFont.Trash}
                                             type={ButtonType.Button}
                                             color={ComponentColor.Danger}
-                                            onClick={this.todo}
+                                            onClick={this.props.handleDeleteTransaction}
                                         />
                                     </Form.Element>
                                 </Grid.Column>

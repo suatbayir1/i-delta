@@ -1,8 +1,6 @@
 // Libraries
-import React, { Component } from 'react'
-import { JsonEditor as Editor } from 'jsoneditor-react';
-import JSONInput from 'react-json-editor-ajrm';
-import locale from 'react-json-editor-ajrm/locale/en';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Components
 import {
@@ -10,33 +8,39 @@ import {
     ComponentColor, IconFont, Button, ButtonType,
 } from '@influxdata/clockface'
 
-// Constants
-import sampleData from "../../shared/constants/sampleData"
-
 class RightSideInformation extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            text: "",
+        }
+    }
+
+
+    getText = () => {
+        const { selectedAction } = this.props;
+        let text = "";
+
+        selectedAction?.transactions.map((transaction, idx) => {
+            text += ` ${idx + 1} - ${transaction.source.name} ==> ${transaction.target.name} : ${transaction.transactionMessage}\n`
+        })
+        return text;
+    }
+
     render() {
+        const { text } = this.state;
+
         return (
             <Panel>
                 <Panel.Header size={ComponentSize.ExtraSmall}>
                     <Grid>
                         <Grid.Row>
-                            {/* <div style={{ maxWidth: "1400px", maxHeight: "100%" }}>
-                                <JSONInput
-                                    placeholder={sampleData} // data to display
-                                    theme="dark_vscode_tribute"
-                                    locale={locale}
-                                    colors={{
-                                        string: "#DAA520" // overrides theme colors with whatever color value you want
-                                    }}
-                                    height="550px"
-                                    width="100%"
-                                />
-                            </div> */}
                             <textarea
                                 rows={4}
-                                onChange={(e) => { this.props.handleChangeSequenceDiagram(e.target.value) }}
+                                onChange={(e) => { }}
                                 style={{ width: '100%', height: "400px", backgroundColor: '#1f2020', color: 'white' }}
-                                value={this.props.sequenceDiagramText}
+                                value={this.getText()}
                             ></textarea>
 
                         </Grid.Row>
@@ -47,4 +51,16 @@ class RightSideInformation extends Component {
     }
 }
 
-export default RightSideInformation;
+const mapStateToProps = (state) => {
+    return {
+        selectedAction: state.action.selectedAction
+
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RightSideInformation);

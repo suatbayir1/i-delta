@@ -19,4 +19,5 @@ action = dict(
 
 transaction = dict(
     add = ["actionID", "source", "target", "transactionMessage"],
+    delete = ["actionID", "transactionID"],
 )

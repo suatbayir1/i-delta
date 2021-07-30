@@ -5,6 +5,7 @@ from app.config import required_keys, request_keys, response_messages, secret
 from app.models.TransactionModel import TransactionModel
 from app.helpers.HelperFunctions import token_control
 import datetime
+import uuid
 
 class TransactionController(FlaskView, ApiBase):
     def __init__(self):
@@ -21,6 +22,7 @@ class TransactionController(FlaskView, ApiBase):
 
             payload = ApiBase.check_request_params(self, request.json, request_keys.transaction["add"])
             payload["createdAt"] = datetime.datetime.now()
+            payload["id"] = uuid.uuid4()
 
             result = self.transactionModel.add(payload)
 
@@ -28,5 +30,26 @@ class TransactionController(FlaskView, ApiBase):
                 raise Exception('Error')
             
             return ApiBase.response(self, message = response_messages.add_transaction["success"]), 200
+        except:
+            return ApiBase.response(self, message = response_messages.general["unexpected_error"]), 400
+
+    @route("delete", methods = ["DELETE"])
+    @token_control(roles = ["admin", "member"])
+    def delete(self, user):
+        try:
+            missed_keys, confirm = ApiBase.request_validation(self, request.json, required_keys.transaction["delete"])
+
+            if not confirm:
+                return ApiBase.response(self, message = f"{missed_keys} {response_messages.general['payload_empty']}"), 400
+
+            payload = ApiBase.check_request_params(self, request.json, request_keys.transaction["delete"])
+            payload["transactionID"] = uuid.UUID(request.json["transactionID"])
+
+            result = self.transactionModel.delete(payload)
+
+            if not result:
+                raise Exception('Error')
+
+            return ApiBase.response(self, message = response_messages.ddelete_transaction["success"]), 200
         except:
             return ApiBase.response(self, message = response_messages.general["unexpected_error"]), 400
