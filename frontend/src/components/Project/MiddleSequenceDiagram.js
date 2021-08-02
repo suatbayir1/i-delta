@@ -15,6 +15,9 @@ import { fetchDeleteAction, fetchDeleteTransaction } from "../../store/";
 // Assets
 import styles from "../../assets/css/sequenceDiagram.module.css";
 
+// Overlays
+import ClassDetail from "../../shared/overlays/ClassDetail";
+
 // Graph global variables
 var d3 = window.d3;
 var XPAD = 50;
@@ -47,6 +50,8 @@ class MiddleSequenceDiagram extends Component {
                 { id: "classF", name: "Class F", prop1: 'prop1', prop2: 'prop2' },
                 { id: "classG", name: "Class G", prop1: 'prop1', prop2: 'prop2' },
             ],
+            selectedClass: {},
+            visibleClassDetailOverlay: false,
         }
     }
 
@@ -99,6 +104,17 @@ class MiddleSequenceDiagram extends Component {
         }
 
         await fetchDeleteTransaction(payload);
+    }
+
+    dismissOverlay = (state) => {
+        this.setState({ [state]: false })
+    }
+
+    handleOpenClassDetailOverlay = (selected) => {
+        this.setState({
+            visibleClassDetailOverlay: true,
+            selectedClass: selected
+        });
     }
 
     createSequenceDiagram = (classes, messages) => {
@@ -182,7 +198,7 @@ class MiddleSequenceDiagram extends Component {
                             alert("A new action to be added")
                             break;
                         case "classDetail":
-                            alert("TODO: Detail overlay will be create")
+                            thisCopy.handleOpenClassDetailOverlay(m);
                             break;
                     }
                 }
@@ -240,20 +256,16 @@ class MiddleSequenceDiagram extends Component {
             .append("svg")
             .attr("width", CANVAS_WIDTH)
             .attr("height", CANVAS_HEIGHT)
+            .call(d3.behavior.zoom().on("zoom", function () {
+                svg.attr('transform', 'translate(' + (d3.event.translate[0]) +
+                    ',' + (d3.event.translate[1]) + ') scale(' + d3.event.scale + ')');
+            }))
+            .append("g")
 
-        // var zoom = d3.behavior.zoom()
-        //     .scaleExtent([1, 8])
-        //     .on("zoom", function () {
-        //         svg.attr("transform", "translate(" + d3.event.translate.join(",") + ")")
-        //     });
-
-        // svg.call(zoom)
 
         update();
 
         function update() {
-
-
             // Draw vertical lines
             var line = svg.selectAll("line")
                 .data(classes)
@@ -284,7 +296,9 @@ class MiddleSequenceDiagram extends Component {
                     .on("mouseover", changeCursorToPointer)
                     .on('contextmenu', function () {
                         d3.event.preventDefault();
+                        // classMenu(d3.mouse(this)[0] + x, d3.mouse(this)[1] + YPAD, c);
                         classMenu(d3.mouse(this)[0] + x, d3.mouse(this)[1] + YPAD, c);
+
                     })
             });
 
@@ -390,8 +404,6 @@ class MiddleSequenceDiagram extends Component {
             selected_node = null;
             update();
         }
-
-
     }
 
 
@@ -508,61 +520,59 @@ class MiddleSequenceDiagram extends Component {
     // }
 
     render() {
-        return (
-            <Panel>
-                <Panel.Header size={ComponentSize.ExtraSmall}>
-                    <Form>
-                        <Grid>
-                            <Grid.Row>
-                                <Grid.Column widthXS={Columns.Twelve}>
-                                    <ActionTabs />
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
-                    </Form>
-                </Panel.Header>
-                <Panel.Body size={ComponentSize.ExtraSmall}>
-                    <Grid.Row>
-                        <div
-                            id="drawArea"
-                            style={{ textAlign: 'center' }}
-                        ></div>
-                    </Grid.Row>
+        const { visibleClassDetailOverlay, selectedClass } = this.state;
 
-                    <Grid.Row>
-                        <Grid.Column widthXS={Columns.Twelve}>
-                            <div style={{ float: 'right', marginTop: '20px' }}>
-                                <FlexBox margin={ComponentSize.Medium}>
-                                    <Button
-                                        text="Zoom Out"
-                                        icon={IconFont.Search}
-                                        type={ButtonType.Button}
-                                        color={ComponentColor.Primary}
-                                    />
-                                    <Button
-                                        text="Zoom In"
-                                        icon={IconFont.Search}
-                                        type={ButtonType.Button}
-                                        color={ComponentColor.Primary}
-                                    />
-                                    <ConfirmationButton
-                                        icon={IconFont.Remove}
-                                        size={ComponentSize.Small}
-                                        onConfirm={this.handleDeleteAction}
-                                        text="Delete Action"
-                                        popoverColor={ComponentColor.Danger}
-                                        popoverAppearance={Appearance.Outline}
-                                        color={ComponentColor.Danger}
-                                        confirmationLabel="Do you want to delete ?"
-                                        confirmationButtonColor={ComponentColor.Danger}
-                                        confirmationButtonText="Yes"
-                                    />
-                                </FlexBox>
-                            </div>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Panel.Body>
-            </Panel>
+        return (
+            <>
+                <ClassDetail
+                    visible={visibleClassDetailOverlay}
+                    selectedClass={selectedClass}
+                    dismissOverlay={this.dismissOverlay}
+                />
+
+                <Panel>
+                    <Panel.Header size={ComponentSize.ExtraSmall}>
+                        <Form>
+                            <Grid>
+                                <Grid.Row>
+                                    <Grid.Column widthXS={Columns.Twelve}>
+                                        <ActionTabs />
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                        </Form>
+                    </Panel.Header>
+                    <Panel.Body size={ComponentSize.ExtraSmall}>
+                        <Grid.Row>
+                            <div
+                                id="drawArea"
+                                style={{ textAlign: 'center' }}
+                            ></div>
+                        </Grid.Row>
+
+                        {/* <Grid.Row>
+                            <Grid.Column widthXS={Columns.Twelve}>
+                                <div style={{ float: 'right', marginTop: '20px' }}>
+                                    <FlexBox margin={ComponentSize.Medium}>
+                                        <ConfirmationButton
+                                            icon={IconFont.Remove}
+                                            size={ComponentSize.Small}
+                                            onConfirm={this.handleDeleteAction}
+                                            text="Delete Action"
+                                            popoverColor={ComponentColor.Danger}
+                                            popoverAppearance={Appearance.Outline}
+                                            color={ComponentColor.Danger}
+                                            confirmationLabel="Do you want to delete ?"
+                                            confirmationButtonColor={ComponentColor.Danger}
+                                            confirmationButtonText="Yes"
+                                        />
+                                    </FlexBox>
+                                </div>
+                            </Grid.Column>
+                        </Grid.Row> */}
+                    </Panel.Body>
+                </Panel>
+            </>
         )
     }
 }

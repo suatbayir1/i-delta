@@ -1,10 +1,11 @@
 // Libraries
 import React, { Component } from 'react'
+import { connect } from "react-redux";
 
 // Components
 import {
-    Panel, Form, ComponentSize, Grid, Columns,
-    ComponentColor, IconFont, Button, ButtonType,
+    Panel, Form, ComponentSize, Grid, Columns, ConfirmationButton,
+    ComponentColor, IconFont, Button, ButtonType, Appearance,
 } from '@influxdata/clockface'
 
 // Overlays
@@ -16,6 +17,9 @@ import AddTransaction from "../../shared/overlays/AddTransaction";
 // Notifications
 import { NotificationManager } from 'react-notifications';
 
+// Actions
+import { fetchDeleteAction, fetchDeleteTransaction } from "../../store/";
+
 class LeftSideOperations extends Component {
     constructor(props) {
         super(props);
@@ -26,6 +30,17 @@ class LeftSideOperations extends Component {
             visibleRegisterWallet: false,
             visibleAddTransaction: false,
         }
+    }
+
+    handleDeleteAction = async () => {
+        const { selectedAction, fetchDeleteAction } = this.props;
+
+        if (selectedAction === undefined) {
+            NotificationManager.error('Please select a action first', 'Error', 3000);
+            return;
+        }
+
+        await fetchDeleteAction(selectedAction);
     }
 
     dismissOverlay = (state) => {
@@ -172,12 +187,17 @@ class LeftSideOperations extends Component {
                             <Grid.Row>
                                 <Grid.Column widthXS={Columns.Twelve}>
                                     <Form.Element label="">
-                                        <Button
-                                            text="Delete Transaction"
-                                            icon={IconFont.Trash}
-                                            type={ButtonType.Button}
+                                        <ConfirmationButton
+                                            icon={IconFont.Remove}
+                                            size={ComponentSize.Small}
+                                            onConfirm={this.handleDeleteAction}
+                                            text="Delete Action"
+                                            popoverColor={ComponentColor.Danger}
+                                            popoverAppearance={Appearance.Outline}
                                             color={ComponentColor.Danger}
-                                            onClick={this.props.handleDeleteTransaction}
+                                            confirmationLabel="Do you want to delete ?"
+                                            confirmationButtonColor={ComponentColor.Danger}
+                                            confirmationButtonText="Yes"
                                         />
                                     </Form.Element>
                                 </Grid.Column>
@@ -190,4 +210,16 @@ class LeftSideOperations extends Component {
     }
 }
 
-export default LeftSideOperations;
+const mapStateToProps = (state) => {
+    return {
+        selectedAction: state.action.selectedAction
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchDeleteAction: (payload) => dispatch(fetchDeleteAction(payload)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LeftSideOperations);
