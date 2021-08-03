@@ -1,10 +1,24 @@
-import React, { useEffect } from 'react'
-import { Redirect, Route } from 'react-router-dom'
+// Libraries
+import React, { useEffect } from 'react';
+import { Redirect, Route } from 'react-router-dom';
 import { connect } from "react-redux";
+import jwt_decode from "jwt-decode";
 
-const PrivateRoute = ({ user, token, component: Component, ...rest }) => {
+// Notifications
+import { NotificationManager } from 'react-notifications';
 
+// Actions
+import { logout } from "../store/"
+
+const PrivateRoute = ({ user, token, logout, component: Component, ...rest }) => {
     const isLoggedIn = token === "" ? false : true;
+
+    if (token !== "") {
+        if (new Date() > new Date(jwt_decode(token).expiry_time * 1000)) {
+            NotificationManager.error("Token expired. Please login again", "Token Expired", 60000);
+            logout();
+        }
+    }
 
     return (
         <Route
@@ -29,7 +43,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {}
+    return {
+        logout: () => dispatch(logout())
+    }
 };
 
 

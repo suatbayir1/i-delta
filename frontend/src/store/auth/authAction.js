@@ -48,12 +48,6 @@ export const fetchLogin = (payload) => {
                         history.push("/");
                         dispatch(loaded());
                     }, 2000)
-
-                    // Auto logout when token expired
-                    setTimeout(() => {
-                        dispatch(logout());
-                        NotificationManager.warning('Token expired. you are redirected to the login screen', 'Time Out');
-                    }, 1000 * 60 * 60 * 24);
                 }
             })
             .catch(err => {

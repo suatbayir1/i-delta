@@ -92,6 +92,7 @@ class SignIn extends Component {
                                                 />
                                             </Form.Element>
                                         </Grid.Column>
+
                                         <Grid.Column widthXS={Columns.Twelve}>
                                             <Form.Element label="Password">
                                                 <Input
@@ -104,6 +105,7 @@ class SignIn extends Component {
                                                 />
                                             </Form.Element>
                                         </Grid.Column>
+
                                         <Grid.Column widthXS={Columns.Twelve}>
                                             <Form.Footer>
                                                 <Button

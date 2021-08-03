@@ -35,7 +35,7 @@ class AuthController(FlaskView, ApiBase):
                     "username": user_data[0]["username"],
                     "userID": user_data[0]["_id"]["$oid"],
                     "role": user_data[0]["role"],
-                    "expiry_time": time.mktime((datetime.datetime.now() + datetime.timedelta(days=1)).timetuple())
+                    "expiry_time": time.mktime((datetime.datetime.now() + datetime.timedelta(days = 1)).timetuple())
                 }, secret.authentication["SECRET_KEY"])
 
                 del user_data[0]['password']
