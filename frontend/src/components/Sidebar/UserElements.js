@@ -1,17 +1,18 @@
 // Libraries
 import React, { Component } from 'react';
-import {
-    Link,
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { connect } from "react-redux";
 
 // Components
 import { TreeNav } from '@influxdata/clockface';
 
 
-export default class UserElements extends Component {
+class UserElements extends Component {
     render() {
+        const { user } = this.props;
+
         return (
-            <TreeNav.User username={"Username"} team={"Role"}>
+            <TreeNav.User username={`${user.firstname} ${user.lastname}`} team={user.role}>
                 <TreeNav.UserItem
                     id="users"
                     label="My Projects"
@@ -28,3 +29,11 @@ export default class UserElements extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.auth.user
+    }
+}
+
+export default connect(mapStateToProps, null)(UserElements);

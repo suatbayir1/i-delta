@@ -1,0 +1,1 @@
+export const ADD_BC_RESPONSE = "ADD_BC_RESPONSE";

@@ -43,6 +43,17 @@ export const hierarchy = [
     //     ],
     // },
     {
+        id: 'my-projects',
+        icon: IconFont.Star,
+        label: 'Projects',
+        link: {
+            type: 'link',
+            location: `/my-projects`,
+        },
+        activeKeywords: ['my-projects', 'project'],
+        permitted: ['member', 'admin', 'editor'],
+    },
+    {
         id: 'example',
         icon: IconFont.Pulse,
         label: 'Example',
@@ -50,7 +61,7 @@ export const hierarchy = [
             type: 'link',
             location: `/example`,
         },
-        activeKeywords: ['example'],
+        activeKeywords: ['', 'example'],
         permitted: ['member', 'admin', 'editor'],
     },
 ]

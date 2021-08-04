@@ -29,3 +29,11 @@ export {
     fetchAddTransaction,
     fetchDeleteTransaction,
 } from "./transaction/transactionAction";
+
+export {
+    fetchAddBC,
+} from "./bc/bcAction";
+
+export {
+    fetchAddSC,
+} from "./sc/scAction";

@@ -3,20 +3,10 @@ import React, { Component } from 'react'
 
 // Components
 import {
-    Form, Button, ButtonType, ComponentColor, Overlay, IconFont, Grid,
-    FlexBox, Columns, ComponentSize, SelectDropdown, Input, ComponentStatus,
+    Form, Overlay, Grid, FlexBox, Columns, ComponentSize, Input, ComponentStatus,
 } from '@influxdata/clockface'
 
-
 class ClassDetail extends Component {
-    componentDidMount() {
-        console.log(this.props.selectedClass);
-    }
-
-    componentDidUpdate() {
-        console.log(this.props.selectedClass);
-    }
-
     render() {
         const { visible, dismissOverlay, selectedClass } = this.props;
 
@@ -72,21 +62,6 @@ class ClassDetail extends Component {
                                     </Form.Element>
                                 </Grid.Column>
                             </Grid.Row>
-
-                            {/* <Form.Footer>
-                                <Button
-                                    text="Cancel"
-                                    icon={IconFont.Remove}
-                                    onDismiss={() => { dismissOverlay("visibleClassDetailOverlay") }}
-                                />
-
-                                <Button
-                                    text="Save"
-                                    icon={IconFont.Checkmark}
-                                    color={ComponentColor.Success}
-                                    type={ButtonType.Submit}
-                                />
-                            </Form.Footer> */}
                         </Form>
                     </Overlay.Body>
                 </Overlay.Container>

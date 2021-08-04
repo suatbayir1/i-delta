@@ -74,3 +74,15 @@ add_transaction = dict(
 ddelete_transaction = dict(
     success = "Transaction deleted successfully"
 )
+
+# BC
+add_bc = dict(
+    success = "Blockchain created successfully",
+    already_exists = "This blockchain name already exists",
+)
+
+# SC
+add_sc = dict(
+    success = "Smart Contract created successfully",
+    already_exists = "This contract name already exists",
+)

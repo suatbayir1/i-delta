@@ -20,6 +20,7 @@
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.4",
     "react-json-editor-ajrm": "^2.5.13",
     "react-multistep": "^5.1.0",
     "react-notifications": "^1.7.2",
@@ -30,6 +31,7 @@
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
     "sass": "^1.35.2",
+    "tronweb": "^3.2.7",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 
 // Components
-import { Page, Grid, DapperScrollbars } from '@influxdata/clockface'
+import { Page, Grid, DapperScrollbars, Columns } from '@influxdata/clockface'
 
 
 class ExamplePage extends Component {
@@ -25,7 +25,9 @@ class ExamplePage extends Component {
                     >
                         <Grid>
                             <Grid.Row>
-                                <h2>Home page contents will be here</h2>
+                                <Grid.Column widthXS={Columns.Twelve}>
+                                    <h2>Home page contents will be here</h2>
+                                </Grid.Column>
                             </Grid.Row>
                         </Grid>
                     </DapperScrollbars>

@@ -51,6 +51,17 @@ class LeftSideOperations extends Component {
         NotificationManager.warning('This method will be developed', 'TODO', 3000);
     }
 
+    openAddTransactionOverlay = () => {
+        const { selectedAction } = this.props;
+
+        if (selectedAction === undefined) {
+            NotificationManager.warning("Please select an action first", "Warning", 3000);
+            return;
+        }
+
+        this.setState({ visibleAddTransaction: true })
+    }
+
     render() {
         const { visibleRegisterBC, visibleRegisterSC, visibleRegisterWallet, visibleAddTransaction } = this.state;
 
@@ -178,7 +189,7 @@ class LeftSideOperations extends Component {
                                             icon={IconFont.Plus}
                                             type={ButtonType.Button}
                                             color={ComponentColor.Success}
-                                            onClick={() => { this.setState({ visibleAddTransaction: true }) }}
+                                            onClick={() => { this.openAddTransactionOverlay() }}
                                         />
                                     </Form.Element>
                                 </Grid.Column>

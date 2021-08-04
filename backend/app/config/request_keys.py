@@ -17,3 +17,11 @@ transaction = dict(
     add = ["actionID", "source", "target", "transactionMessage"],
     delete = ["actionID", "transactionID"],
 )
+
+bc = dict(
+    add = ["userID", "selectedNetwork", "bcName", "infrastructure"],
+)
+
+sc = dict(
+    add = ["userID", "abiContent", "contractAddress", "contractName", "infrastructure"],
+)
