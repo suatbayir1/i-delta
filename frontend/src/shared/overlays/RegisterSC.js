@@ -9,7 +9,7 @@ import locale from 'react-json-editor-ajrm/locale/en';
 // Components
 import {
     Form, Button, ButtonType, ComponentColor, Overlay, IconFont, Grid, TextArea,
-    Columns, Input, Tabs
+    Columns, Input, Tabs, SelectDropdown,
 } from '@influxdata/clockface'
 
 // Notification
@@ -29,6 +29,7 @@ class RegisterSC extends Component {
                 { id: "solana", text: "Solana" },
                 { id: "algorand", text: "Algorand" },
                 { id: "ethereum", text: "Ethereum" },
+                { id: "hyperledger", text: "HyperLedger" },
             ],
             selectedTab: { id: "tron", text: "Tron" },
             abiContent: "",
@@ -135,20 +136,29 @@ class RegisterSC extends Component {
         const avalancheComponents = (
             <Grid.Row>
                 <Grid.Column widthSM={Columns.Six}>
-                    <Input
-                        name="example"
-                        placeholder="Example.."
-                        onChange={() => { }}
-                        value={"a"}
-                    />
+                    <Form.Element
+                        label="Example 1"
+                        required={true}
+                    >
+                        <Input
+                            name="example"
+                            placeholder="Example.."
+                            onChange={() => { }}
+                            value={"a"}
+                        />
+                    </Form.Element>
                 </Grid.Column>
                 <Grid.Column widthSM={Columns.Six}>
-                    <Input
-                        name="example"
-                        placeholder="Example.."
-                        onChange={() => { }}
-                        value={"a"}
-                    />
+                    <Form.Element
+                        label="Example 1"
+                        required={true}
+                    >
+                        <SelectDropdown
+                            options={["option1", "option2"]}
+                            selectedOption={"option1"}
+                            onSelect={(e) => { console.log(e) }}
+                        />
+                    </Form.Element>
                 </Grid.Column>
             </Grid.Row>
         )
@@ -164,7 +174,11 @@ class RegisterSC extends Component {
                     <Overlay.Body>
                         <Form>
                             <Tabs.Container style={{ marginBottom: '20px' }}>
-                                <Tabs>
+                                <Tabs
+                                    style={{
+                                        overflow: "auto",
+                                        whiteSpace: "nowrap",
+                                    }}>
                                     {
                                         bcTypes.map(tab => {
                                             return (
