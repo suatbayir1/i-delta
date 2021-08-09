@@ -36,6 +36,7 @@ class RegisterSC extends Component {
             contractAddress: "",
             contractName: "",
             isJsonCorrect: false,
+            selectedNetwork : ""
         }
     }
 
@@ -74,7 +75,7 @@ class RegisterSC extends Component {
 
     render() {
         const { visible, dismissOverlay } = this.props;
-        const { bcTypes, selectedTab, abiContent, contractAddress, contractName } = this.state;
+        const { bcTypes, selectedTab, abiContent, contractAddress, contractName, selectedNetwork } = this.state;
 
         const tronComponents = (
             <Grid.Row>
@@ -163,6 +164,91 @@ class RegisterSC extends Component {
             </Grid.Row>
         )
 
+        const ethereumComponents = (
+            <Grid.Row>
+                <Grid.Column widthSM={Columns.Six}>
+                    <Form.Element
+                        label="Network"
+                        required={true}
+                    >
+                        <SelectDropdown
+                            options={["local", "testnet", "mainnet"]}
+                            selectedOption={selectedNetwork}
+                            onSelect={(e) => {this.setState({selectedNetwork: e})}}
+                        />
+                    </Form.Element>
+                </Grid.Column>
+                
+                {
+                    selectedNetwork == "testnet" && 
+                    <Grid.Column widthSM={Columns.Six}>
+                        <Form.Element
+                            label="Testnet URL"
+                            required={true}
+                        >
+                            <Input
+                                placeholder="Testnet URL.."
+                                onChange={(e) => { this.setState({ contractAddress: e.target.value }) }}
+                                value={contractAddress}
+                            />
+                        </Form.Element>
+                    </Grid.Column>
+                }
+                <Grid.Column widthSM={Columns.Six}>
+                    <Form.Element
+                        label="Contract Name"
+                        required={true}
+                    >
+                        <Input
+                            placeholder="Contract Name.."
+                            onChange={(e) => { this.setState({ contractName: e.target.value }) }}
+                            value={contractName}
+                        />
+                    </Form.Element>
+                </Grid.Column>
+
+                <Grid.Column widthSM={Columns.Six}>
+                    <Form.Element
+                        label="Contract Address"
+                        required={true}
+                    >
+                        <Input
+                            placeholder="Contract Address.."
+                            onChange={(e) => { this.setState({ contractAddress: e.target.value }) }}
+                            value={contractAddress}
+                        />
+                    </Form.Element>
+                </Grid.Column>
+                
+                <Grid.Column widthSM={Columns.Twelve}>
+                    <Form.Element
+                        label="Abi Content"
+                        required={true}
+                    >
+                        {/* <TextArea
+                            value={abiContent}
+                            placeholder="Abi Content.."
+                            onChange={(e) => { this.setState({ abiContent: e.target.value }) }}
+                            rows={10}
+                        /> */}
+                        <div style={{ maxWidth: "1400px", maxHeight: "100%" }}>
+                            <JSONInput
+                                // placeholder={sampleData} // data to display
+                                theme="dark_vscode_tribute"
+                                locale={locale}
+                                onChange={(e) => { this.setState({ abiContent: e.json, isJsonCorrect: e.error }) }}
+                                colors={{
+                                    string: "#DAA520"
+                                }}
+                                height="300px"
+                                width="100%"
+                            />
+                        </div>
+                    </Form.Element>
+                </Grid.Column>
+            </Grid.Row>
+        )
+
         return (
             <Overlay visible={visible}>
                 <Overlay.Container maxWidth={600}>
@@ -196,6 +282,7 @@ class RegisterSC extends Component {
 
                             {selectedTab.id === "tron" && tronComponents}
                             {selectedTab.id === "avalanche" && avalancheComponents}
+                            {selectedTab.id === "ethereum" && ethereumComponents}
 
 
                             <Form.Footer>
