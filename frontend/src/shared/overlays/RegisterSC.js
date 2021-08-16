@@ -9,7 +9,9 @@ import locale from 'react-json-editor-ajrm/locale/en';
 // Components
 import {
     Form, Button, ButtonType, ComponentColor, Overlay, IconFont, Grid, TextArea,
-    Columns, Input, Tabs, SelectDropdown,
+    Columns, Input, Tabs, SelectDropdown, Toggle, InputLabel, FlexBox, SlideToggle,
+    FlexDirection, SquareButton,
+    ComponentSize
 } from '@influxdata/clockface'
 
 // Notification
@@ -36,7 +38,8 @@ class RegisterSC extends Component {
             contractAddress: "",
             contractName: "",
             isJsonCorrect: false,
-            selectedNetwork : ""
+            selectedNetwork : "",
+            scArguments: [{ type: "", arg: "" }]
         }
     }
 
@@ -73,12 +76,66 @@ class RegisterSC extends Component {
         }
     }
 
+    handleAddClick = () => {
+        this.setState({
+            scArguments: [...this.state.scArguments, { type: "", arg: "" }]
+        }, () => { console.log(this.state.scArguments) })
+    }
+
+    handleRemoveClick = (index) => {
+        const { scArguments } = this.state
+        scArguments.splice(index, 1)
+        this.setState({scArguments})
+    }
+
+    changeType = (e, index) => {
+        const { scArguments } = this.state
+        scArguments[index].type = e
+        this.setState({ scArguments }, () => { console.log(scArguments) })
+    }
+
+    changeArg = (e, index) => {
+        const { scArguments } = this.state
+        scArguments[index].arg = e
+        this.setState({ scArguments }, () => { console.log(scArguments) })
+    }
+
+    handleSelect = (selectedOption) => { this.setState({ selectedOption }) }
     render() {
         const { visible, dismissOverlay } = this.props;
-        const { bcTypes, selectedTab, abiContent, contractAddress, contractName, selectedNetwork } = this.state;
+        const { bcTypes, selectedTab, abiContent, contractAddress, contractName } = this.state;
+        const { selectedNetwork, scArguments } = this.state
 
         const tronComponents = (
             <Grid.Row>
+                <Grid.Column widthSM={Columns.Six}>
+                    <Form.Element
+                        label="Network"
+                        required={true}
+                    >
+                        <SelectDropdown
+                            options={["local", "testnet", "mainnet"]}
+                            selectedOption={selectedNetwork}
+                            onSelect={(e) => { this.setState({ selectedNetwork: e }) }}
+                        />
+                    </Form.Element>
+                </Grid.Column>
+
+                {
+                    selectedNetwork == "testnet" &&
+                    <Grid.Column widthSM={Columns.Six}>
+                        <Form.Element
+                            label="Testnet URL"
+                            required={true}
+                        >
+                            <Input
+                                placeholder="Testnet URL.."
+                                onChange={(e) => { this.setState({ contractAddress: e.target.value }) }}
+                                value={contractAddress}
+                            />
+                        </Form.Element>
+                    </Grid.Column>
+                }
                 <Grid.Column widthSM={Columns.Six}>
                     <Form.Element
                         label="Contract Name"
@@ -188,9 +245,7 @@ class RegisterSC extends Component {
                         >
                             <Input
                                 placeholder="Testnet URL.."
-                                onChange={(e) => { this.setState({ contractAddress: e.target.value }) }}
-                                value={contractAddress}
-                            />
+                                />
                         </Form.Element>
                     </Grid.Column>
                 }
@@ -219,7 +274,7 @@ class RegisterSC extends Component {
                         />
                     </Form.Element>
                 </Grid.Column>
-                
+
                 <Grid.Column widthSM={Columns.Twelve}>
                     <Form.Element
                         label="Abi Content"
@@ -247,6 +302,85 @@ class RegisterSC extends Component {
                     </Form.Element>
                 </Grid.Column>
             </Grid.Row>
+        )
+
+        const solanaComponents = (
+            <>
+                <Grid.Row>
+                    <Grid.Column widthSM={Columns.Six} active={this.state.isPogram}>
+                        <Form.Element
+                            label="Program Name"
+                            required={true}
+                            disabled={false}
+                        >
+                            <Input
+                                placeholder="Program Name.."
+                                onChange={(e) => { this.setState({ contractName: e.target.value }) }}
+                                value={contractName}
+                            />
+                        </Form.Element>
+                    </Grid.Column>
+
+                    <Grid.Column widthSM={Columns.Six}>
+                        <Form.Element
+                            label="Program Address"
+                            required={true}
+                        >
+                            <Input
+                                placeholder="Program Address.."
+                                onChange={(e) => { this.setState({ contractAddress: e.target.value }) }}
+                                value={contractAddress}
+                            />
+                        </Form.Element>
+                    </Grid.Column>
+                </Grid.Row>
+
+                <Grid.Row >
+                    <Grid.Column widthSM={Columns.Six}>
+                        <Button
+                            text="Add Argument"
+                            icon={IconFont.Plus}
+                            color={ComponentColor.Primary}
+                            onClick={this.handleAddClick}
+                        />
+
+                    </Grid.Column>
+                </Grid.Row>
+
+                <div>{scArguments.map((item, index) => {
+                    return (
+                        <Grid.Row style={{ marginTop: "10px" }}>
+                            <Grid.Column widthSM={Columns.Three}>
+                                <SelectDropdown
+                                    options={["int", "string", "bool"]}
+                                    selectedOption={scArguments[index].type}
+                                    onSelect={(e) => { this.changeType(e, index) }}
+                                /></Grid.Column>
+
+                            <Grid.Column widthSM={Columns.Eight}>
+                                <Form.Element
+                                    label={""}
+                                    required={true}
+                                    disabled={false}
+                                >
+                                    <Input
+                                        placeholder={""}
+                                        onChange={(e) => { this.changeArg(e.target.value, index) }}
+                                        value={scArguments[index].arg}
+                                    />
+                                </Form.Element>
+                            </Grid.Column>
+                            <Grid.Column widthSM={Columns.One}>
+                                <SquareButton icon="remove"
+                                    onClick={ () => {this.handleRemoveClick(index)}}>
+
+                                </SquareButton>
+                            </Grid.Column>
+                        </Grid.Row>
+                    )
+                })} </div>
+
+                </>
         )
 
         return (
@@ -283,6 +417,8 @@ class RegisterSC extends Component {
                             {selectedTab.id === "tron" && tronComponents}
                             {selectedTab.id === "avalanche" && avalancheComponents}
                             {selectedTab.id === "ethereum" && ethereumComponents}
+                            {selectedTab.id === "solana" && solanaComponents}
+
 
 
                             <Form.Footer>
@@ -307,6 +443,7 @@ class RegisterSC extends Component {
         )
     }
 }
+
 
 
 const mapStateToProps = (state) => {

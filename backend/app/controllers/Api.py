@@ -1,5 +1,6 @@
 import sys
 sys.path.insert(1, '/home/suat/Desktop/i-delta/backend/')
+
 from flask import Flask, jsonify, request, Response
 from flask_classful import FlaskView, route
 from app.middlewares.ApiBase import ApiBase
