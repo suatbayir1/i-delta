@@ -10,8 +10,10 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import {
     Form, Button, ButtonType, ComponentColor, Overlay, IconFont, Grid, TextArea,
     Columns, Input, Tabs, SelectDropdown, Toggle, InputLabel, FlexBox, SlideToggle,
-    FlexDirection, SquareButton,
-    ComponentSize
+    FlexDirection, SquareButton, ButtonGroup,
+    ComponentSize,
+    Orientation,
+    ComponentStatus
 } from '@influxdata/clockface'
 
 // Notification
@@ -85,7 +87,7 @@ class RegisterSC extends Component {
     handleRemoveClick = (index) => {
         const { scArguments } = this.state
         scArguments.splice(index, 1)
-        this.setState({scArguments})
+        this.setState({ scArguments })
     }
 
     changeType = (e, index) => {
@@ -101,6 +103,23 @@ class RegisterSC extends Component {
     }
 
     handleSelect = (selectedOption) => { this.setState({ selectedOption }) }
+
+    reOrder = (type, index, item) => {
+        console.log(type, index);
+        const { scArguments } = this.state;
+
+        switch (type) {
+            case "up":
+                scArguments.splice(index - 1, 0, scArguments.splice(index, 1)[0]);
+                break;
+            case "down":
+                scArguments.splice(index + 1, 0, scArguments.splice(index, 1)[0]);
+                break;
+        }
+
+        this.setState({ scArguments });
+    }
+
     render() {
         const { visible, dismissOverlay } = this.props;
         const { bcTypes, selectedTab, abiContent, contractAddress, contractName } = this.state;
@@ -349,7 +368,7 @@ class RegisterSC extends Component {
 
                 <div>{scArguments.map((item, index) => {
                     return (
-                        <Grid.Row style={{ marginTop: "10px" }}>
+                        <Grid.Row style={{ marginTop: "10px" }} key={index}>
                             <Grid.Column widthSM={Columns.Three}>
                                 <SelectDropdown
                                     options={["int", "string", "bool"]}
@@ -357,7 +376,7 @@ class RegisterSC extends Component {
                                     onSelect={(e) => { this.changeType(e, index) }}
                                 /></Grid.Column>
 
-                            <Grid.Column widthSM={Columns.Eight}>
+                            <Grid.Column widthSM={Columns.Six}>
                                 <Form.Element
                                     label={""}
                                     required={true}
@@ -370,11 +389,35 @@ class RegisterSC extends Component {
                                     />
                                 </Form.Element>
                             </Grid.Column>
-                            <Grid.Column widthSM={Columns.One}>
-                                <SquareButton icon="remove"
-                                    onClick={ () => {this.handleRemoveClick(index)}}>
 
-                                </SquareButton>
+                            <Grid.Column widthSM={Columns.One}>
+                                <FlexBox margin={ComponentSize.Medium}>
+                                    <SquareButton icon="remove"
+                                        onClick={() => { this.handleRemoveClick(index) }}>
+                                    </SquareButton>
+                                </FlexBox>
+                            </Grid.Column>
+
+                            <Grid.Column widthSM={Columns.Two}>
+                                <ButtonGroup orientation={Orientation.Horizontal}>
+                                    <Button
+                                        text=""
+                                        icon={IconFont.CaretUp}
+                                        color={ComponentColor.Success}
+                                        type={ButtonType.Submit}
+                                        onClick={() => { this.reOrder("up", index, item) }}
+                                        status={index === 0 ? ComponentStatus.Disabled : ComponentStatus.Default}
+                                    />
+
+                                    <Button
+                                        text=""
+                                        icon={IconFont.CaretDown}
+                                        color={ComponentColor.Primary}
+                                        type={ButtonType.Submit}
+                                        onClick={() => { this.reOrder("down", index, item) }}
+                                        status={index === scArguments.length - 1 ? ComponentStatus.Disabled : ComponentStatus.Default}
+                                    />
+                                </ButtonGroup>
                             </Grid.Column>
                         </Grid.Row>
                     )
