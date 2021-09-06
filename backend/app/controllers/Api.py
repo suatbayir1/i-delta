@@ -13,6 +13,7 @@ from app.controllers.ActionController import ActionController
 from app.controllers.TransactionController import TransactionController
 from app.controllers.BCController import BCController
 from app.controllers.SCController import SCController
+from app.controllers.DIDController import DIDController
 
 class Api(FlaskView, ApiBase):
     def __init__(self):
@@ -37,4 +38,5 @@ if __name__ == "__main__":
     TransactionController.register(app, route_base = '/api/transaction/')
     BCController.register(app, route_base = '/api/bc/')
     SCController.register(app, route_base = '/api/sc/')
+    DIDController.register(app, route_base = '/api/did/')
     app.run(debug = True, port = 9632)

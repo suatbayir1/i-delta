@@ -86,3 +86,9 @@ add_sc = dict(
     success = "Smart Contract created successfully",
     already_exists = "This contract name already exists",
 )
+
+# DID
+did_generate = dict(
+    success = "DID created successfully",
+    already_exists = "This email already exists",
+)

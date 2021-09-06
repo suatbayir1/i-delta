@@ -13,6 +13,7 @@ import Sidebar from "../shared/components/Sidebar"
 import Logout from '../components/Auth/Logout';
 import Projects from '../containers/Projects/Projects';
 import AddProject from "../shared/overlays/AddProject";
+import DID from "../containers/DID/DID";
 
 class UserLayout extends Component {
     render() {
@@ -28,6 +29,7 @@ class UserLayout extends Component {
                             <Route exact path="/my-projects" component={Projects} />
                             <Route exact path="/add-project" component={AddProject} />
                             <Route exact path="/project/:id" component={Project} />
+                            <Route exact path="/did" component={DID} />
                             <Route exact path="/" component={ExamplePage} />
                         </Switch>
                     </Router>

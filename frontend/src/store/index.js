@@ -37,3 +37,7 @@ export {
 export {
     fetchAddSC,
 } from "./sc/scAction";
+
+export {
+    fetchGenerateDID,
+} from "./did/didAction";

@@ -29,3 +29,7 @@ bc = dict(
 sc = dict(
     add = ["userID", "abiContent", "contractAddress", "contractName", "infrastructure"],
 )
+
+did = dict(
+    generate = ["name", "email", "addresses"],
+)

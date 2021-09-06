@@ -54,6 +54,17 @@ export const hierarchy = [
         permitted: ['member', 'admin', 'editor'],
     },
     {
+        id: 'did',
+        icon: IconFont.Link,
+        label: 'DID',
+        link: {
+            type: 'link',
+            location: `/did`,
+        },
+        activeKeywords: ['did'],
+        permitted: ['member', 'admin', 'editor'],
+    },
+    {
         id: 'example',
         icon: IconFont.Pulse,
         label: 'Example',

@@ -40,7 +40,7 @@ class RegisterSC extends Component {
             contractAddress: "",
             contractName: "",
             isJsonCorrect: false,
-            selectedNetwork : "",
+            selectedNetwork: "",
             scArguments: [{ type: "", arg: "" }]
         }
     }
@@ -250,13 +250,13 @@ class RegisterSC extends Component {
                         <SelectDropdown
                             options={["local", "testnet", "mainnet"]}
                             selectedOption={selectedNetwork}
-                            onSelect={(e) => {this.setState({selectedNetwork: e})}}
+                            onSelect={(e) => { this.setState({ selectedNetwork: e }) }}
                         />
                     </Form.Element>
                 </Grid.Column>
-                
+
                 {
-                    selectedNetwork == "testnet" && 
+                    selectedNetwork == "testnet" &&
                     <Grid.Column widthSM={Columns.Six}>
                         <Form.Element
                             label="Testnet URL"
@@ -264,7 +264,7 @@ class RegisterSC extends Component {
                         >
                             <Input
                                 placeholder="Testnet URL.."
-                                />
+                            />
                         </Form.Element>
                     </Grid.Column>
                 }
@@ -423,7 +423,7 @@ class RegisterSC extends Component {
                     )
                 })} </div>
 
-                </>
+            </>
         )
 
         return (
@@ -486,8 +486,6 @@ class RegisterSC extends Component {
         )
     }
 }
-
-
 
 const mapStateToProps = (state) => {
     return {
