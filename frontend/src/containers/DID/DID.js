@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 // Components
 import { Page, Tabs } from '@influxdata/clockface'
 import GenerateDID from "../../components/DID/GenerateDID";
-
+import DidList from "../../components/DID/DidList";
 
 class DID extends Component {
     constructor(props) {
@@ -12,7 +12,8 @@ class DID extends Component {
 
         this.state = {
             tabs: [
-                { id: "generate-did", text: 'Generate DID' }
+                { id: "generate-did", text: 'Generate DID' },
+                { id: "did-list", text: 'DID List' }
             ],
             selectedTab: { id: "generate-did", text: 'Generate DID' }
         }
@@ -27,7 +28,7 @@ class DID extends Component {
                     <Page.Title title="DID Manager" />
                 </Page.Header>
 
-                <Page.Contents fullWidth={false}>
+                <Page.Contents fullWidth={false} scrollable={true}>
                     <Tabs.Container style={{ marginBottom: '20px' }}>
                         <Tabs>
                             {
@@ -46,6 +47,7 @@ class DID extends Component {
                     </Tabs.Container>
 
                     {selectedTab.id === "generate-did" && <GenerateDID />}
+                    {selectedTab.id === "did-list" && <DidList />}
 
                 </Page.Contents>
             </Page>

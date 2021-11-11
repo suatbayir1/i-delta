@@ -1,1 +1,3 @@
-export const GENERATE_DID = "GENERATE_DID";
+export const GENERATE_DID_RESPONSE = "GENERATE_DID_RESPONSE";
+export const CLEAR_KEY_PAIR = "CLEAR_KEY_PAIR";
+export const GET_DID_LIST = "GET_DID_LIST";

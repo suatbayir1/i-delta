@@ -1,0 +1,22 @@
+{
+    "getAllDids": [
+        "superadmin",
+        "admin",
+        "member"
+    ],
+    "createDid": [
+        "superadmin",
+        "admin",
+        "member"
+    ],
+    "signJwt": [
+        "superadmin",
+        "admin",
+        "member"
+    ],
+    "verify": [
+        "superadmin",
+        "admin",
+        "member"
+    ]
+}

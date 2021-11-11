@@ -7,6 +7,7 @@ import generalReducer from "./general/generalReducer";
 import projectReducer from "./project/projectReducer";
 import actionReducer from "./action/actionReducer";
 import scReducer from "./sc/scReducer";
+import didReducer from "./did/didReducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     project: projectReducer,
     action: actionReducer,
     sc: scReducer,
+    did: didReducer,
 });
 
 export default rootReducer;

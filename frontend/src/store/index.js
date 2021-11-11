@@ -40,4 +40,6 @@ export {
 
 export {
     fetchGenerateDID,
+    clearKeyPair,
+    fetchDidList,
 } from "./did/didAction";

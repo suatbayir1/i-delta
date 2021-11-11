@@ -26,11 +26,13 @@ class GenerateDID extends Component {
 
         this.state = {
             addresses: [
-                { type: "", address: "" }
+                { type: "", address: "" },
             ],
             name: "",
             email: "",
             location: "",
+            didName: "",
+            passPhrase: "",
         }
     }
 
@@ -59,12 +61,12 @@ class GenerateDID extends Component {
     }
 
     generate = async () => {
-        const { addresses, name, email, location, } = this.state;
+        const { addresses, name, email, location, didName, passPhrase } = this.state;
         const { fetchGenerateDID, user } = this.props;
         let error = false;
 
-        if (name.trim() === "" || email.trim() === "") {
-            NotificationManager.error('Name or email cannot be empty', 'Error', 3000);
+        if (name.trim() === "" || email.trim() === "" || didName.trim() === "" || passPhrase.trim() === "") {
+            NotificationManager.error('Please fill out the form completely', 'Error', 3000);
             return;
         }
 
@@ -84,6 +86,8 @@ class GenerateDID extends Component {
                 email,
                 location,
                 addresses,
+                didName,
+                passPhrase,
                 createdAt: Date.now()
             }
 
@@ -93,7 +97,7 @@ class GenerateDID extends Component {
     }
 
     render() {
-        const { addresses, name, email, location, } = this.state;
+        const { addresses, name, email, location, didName, passPhrase } = this.state;
 
         return (
             <>
@@ -207,7 +211,7 @@ class GenerateDID extends Component {
                                                 autoHide={false}
                                                 noScrollX={true}
                                                 autoSizeHeight={true}
-                                                style={{ maxHeight: '200px' }}
+                                                style={{ maxHeight: '130px' }}
                                                 className="data-loading--scroll-content"
                                             >
                                                 {addresses.map((item, index) => {
@@ -256,6 +260,59 @@ class GenerateDID extends Component {
                                                 })}
                                             </DapperScrollbars>
                                         </div>
+                                    </Panel>
+                                </Grid.Column>
+                            </Grid.Row>
+
+
+                            <Grid.Row>
+                                {/* DID INFORMATION */}
+                                <Grid.Column widthXS={Columns.Six}>
+                                    <Panel style={{ backgroundColor: '#292933', padding: '10px', marginTop: '20px' }}>
+                                        <FlexBox
+                                            style={{ marginBottom: '20px' }}
+                                            margin={ComponentSize.Medium}
+                                        >
+                                            <h2 style={{ color: '#B1B6FF' }}>DID Information</h2>
+                                            <QuestionMarkTooltip
+                                                diameter={20}
+                                                tooltipStyle={{ width: '400px' }}
+                                                color={ComponentColor.Secondary}
+                                                tooltipContents={<div style={{ whiteSpace: 'pre-wrap', fontSize: "13px" }}>
+                                                    <div style={{ color: InfluxColors.Star }}>{"Personal information:"}
+                                                        <hr style={tipStyle} />
+                                                    </div>
+                                                    {personalInformation}
+                                                </div>}
+                                            />
+                                        </FlexBox>
+
+                                        <Grid.Row>
+                                            <Grid.Column widthXS={Columns.Six}>
+                                                <Form.Element
+                                                    label="DID Name"
+                                                    required={true}
+                                                >
+                                                    <Input
+                                                        onChange={(e) => { this.setState({ didName: e.target.value }) }}
+                                                        value={didName}
+                                                    />
+                                                </Form.Element>
+                                            </Grid.Column>
+
+                                            <Grid.Column widthXS={Columns.Six}>
+                                                <Form.Element
+                                                    label="Pass Phrase"
+                                                    required={true}
+                                                >
+                                                    <Input
+                                                        onChange={(e) => { this.setState({ passPhrase: e.target.value }) }}
+                                                        value={passPhrase}
+                                                    />
+                                                </Form.Element>
+                                            </Grid.Column>
+                                        </Grid.Row>
+
                                     </Panel>
                                 </Grid.Column>
                             </Grid.Row>
