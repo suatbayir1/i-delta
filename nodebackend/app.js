@@ -1,35 +1,31 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const expressValidator = require('express-validator');
 const cors = require("cors");
 const auth = require('./middlewares/auth');
+const connectDatabase = require('./helpers/database/connectDatabase');
+const routers = require('./routes/index');
+const customErrorHandler = require('./middlewares/errors/customErrorHandler');
 require('dotenv/config')
 
 // Middlewares
 app.use(cors());
-app.use(bodyParser.json());
 app.use(expressValidator());
 app.use(auth.isAuthenticated);
 
-// Import Routes
-const postsRoute = require('./routes/posts');
-const didRoute = require('./routes/did');
+// Express BodyParser
+app.use(express.json());
 
-app.use('/api/posts', postsRoute);
-app.use('/api/did', didRoute);
+// Mongodb Connection
+connectDatabase();
 
-// Routes
-app.get("/", (req, res) => {
-    res.send('We are on home')
+// Routers Middleware
+app.use('/api', routers);
+
+// Error Handling
+app.use(customErrorHandler);
+
+// App start
+app.listen(process.env.PORT, () => {
+    console.log(`App started on ${process.env.PORT} : ${process.env.NODE_ENV}`);
 })
-
-// connect to db 
-mongoose.connect(
-    process.env.DB_CONNECTION,
-    () => console.log("connected to db")
-)
-
-// Listen
-app.listen(3001);

@@ -46,6 +46,7 @@ class DID extends Component {
                         </Tabs>
                     </Tabs.Container>
 
+
                     {selectedTab.id === "generate-did" && <GenerateDID />}
                     {selectedTab.id === "did-list" && <DidList />}
 

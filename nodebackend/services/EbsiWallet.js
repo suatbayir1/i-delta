@@ -13,11 +13,11 @@ class EbsiWallet {
 
     signJwt = async (payload) => {
         try {
-            const algorithm = 'ES256'
+            const algorithm = 'ES256K'
             const ecPrivateKey = await importPKCS8(this.privateKey, algorithm)
 
             const jwt = await new SignJWT(payload)
-                .setProtectedHeader({ alg: 'ES256' })
+                .setProtectedHeader({ alg: 'ES256K' })
                 .setIssuedAt()
                 .setIssuer('urn:example:issuer')
                 .setAudience('urn:example:audience')

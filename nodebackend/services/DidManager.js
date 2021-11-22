@@ -5,7 +5,7 @@ class DidManager {
     generateKeys = async (passPhrase) => {
         try {
             const { publicKey, privateKey } = generateKeyPairSync('ec', {
-                namedCurve: 'P-256',
+                namedCurve: 'secp256k1',
                 publicKeyEncoding: {
                     type: 'spki',
                     format: 'pem'

@@ -6,3 +6,6 @@ export const NODE_URL = 'http://localhost:3001/api/';
 
 // Tron
 export const testServer = 'https://api.shasta.trongrid.io';
+
+// Ebsi DID URLS
+export const createEbsiDidUrl = `${NODE_URL}did/createEbsiDid`;

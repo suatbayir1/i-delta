@@ -9,6 +9,11 @@
         "admin",
         "member"
     ],
+    "createEbsiDid": [
+        "superadmin",
+        "admin",
+        "member"
+    ],
     "signJwt": [
         "superadmin",
         "admin",

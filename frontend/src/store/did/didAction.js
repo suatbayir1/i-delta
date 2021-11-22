@@ -23,13 +23,12 @@ export const clearKeyPair = () => {
     }
 }
 
-export const fetchGenerateDID = (payload) => {
+export const fetchGenerateDID = (payload, url) => {
     return (dispatch, getState) => {
-        let url = `${NODE_URL}did/createDid`;
-
         axios
             .post(url, payload, { headers: { 'token': getState().auth.token } })
             .then(response => {
+                console.log(response);
                 if (response.status === 200) {
                     const key = response.data.data;
                     dispatch(generateDidResponse(key));

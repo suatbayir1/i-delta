@@ -9,14 +9,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cef-ebsi/app-jwt": "^0.0.13",
+    "@cef-ebsi/oauth2-auth": "^1.0.0-alpha.15",
+    "@cef-ebsi/wallet-lib": "^1.0.0-rc.3",
+    "@ethersproject/bignumber": "^5.5.0",
+    "@ethersproject/providers": "^5.5.0",
+    "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-async-handler": "^1.2.0",
     "express-validator": "^5.3.0",
     "jose": "^4.1.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
+    "node-jose": "^2.0.0",
     "nodemon": "^2.0.14"
   }
 }

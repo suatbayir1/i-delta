@@ -4,10 +4,12 @@ const DidManager = require('../services/DidManager');
 const EbsiWallet = require('../services/EbsiWallet');
 const helper = require('../helpers/helper');
 const Did = require('../models/Did');
-const { jwtVerify, importSPKI } = require('jose')
+const { jwtVerify, importSPKI } = require('jose');
+const CustomError = require('../helpers/error/CustomError');
+const asyncErrorWrapper = require('express-async-handler');
+const EbsiService = require('../services/EbsiService');
 
-
-exports.validate = (method) => {
+const validate = (method) => {
     switch (method) {
         case 'createDid': {
             return [
@@ -16,6 +18,17 @@ exports.validate = (method) => {
                 body('email', 'Invalid email').isEmail(),
                 body('didName', "didName doesn't exists").exists(),
                 body('passPhrase', "passPhrase doesn't exists").exists(),
+                body('addresses').isArray(),
+            ]
+        }
+        case 'createEbsiDid': {
+            return [
+                body('name', "name doesn't exists").exists(),
+                body('email', "email doesn't exists").exists(),
+                body('email', 'Invalid email').isEmail(),
+                body('didName', "didName doesn't exists").exists(),
+                body('passPhrase', "passPhrase doesn't exists").exists(),
+                body('didDocument', "didDocument doesn't exists").exists(),
                 body('addresses').isArray(),
             ]
         }
@@ -34,7 +47,7 @@ exports.validate = (method) => {
     }
 }
 
-exports.getAllDids = async (req, res) => {
+const getAllDids = async (req, res) => {
     try {
         const dids = await Did.find({ "userID": res.locals.user._id })
         res.json({ dids });
@@ -43,7 +56,7 @@ exports.getAllDids = async (req, res) => {
     }
 }
 
-exports.createDid = async (req, res, next) => {
+const createDid = async (req, res, next) => {
     try {
         const errors = validationResult(req);
 
@@ -102,7 +115,7 @@ exports.createDid = async (req, res, next) => {
     }
 }
 
-exports.signJwt = async (req, res) => {
+const signJwt = async (req, res) => {
     try {
         const errors = validationResult(req);
 
@@ -126,7 +139,7 @@ exports.signJwt = async (req, res) => {
     }
 }
 
-exports.verify = async (req, res) => {
+const verify = async (req, res) => {
     try {
         const errors = validationResult(req);
 
@@ -149,4 +162,29 @@ exports.verify = async (req, res) => {
     } catch (err) {
         res.status(403).json({ message: err.message });
     }
+}
+
+const createEbsiDid = asyncErrorWrapper(async (req, res, next) => {
+    const { didDocument } = req.body;
+
+    const ebsiService = new EbsiService();
+
+    const result = await ebsiService.createDid(didDocument);
+
+    if (result.status === 400) {
+        return next(new CustomError(result.message, result.status));
+    }
+
+    res.status(200).json({ data: { "keys": "private key will be here" }, message: "Did created successfully" });
+
+    // return next(new CustomError("new error", 403));
+})
+
+module.exports = {
+    validate,
+    getAllDids,
+    createDid,
+    signJwt,
+    verify,
+    createEbsiDid
 }
