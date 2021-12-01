@@ -1,6 +1,7 @@
 auth = dict(
-    signUp = ["username", "password", "firstname", "lastname", "role"],
+    signUp = ["username", "password", "firstname", "lastname", "email"],
     signIn = ["username", "password"],
+    editProfile = ["firstname", "lastname", "email", "location"],
 )
 
 project = dict(

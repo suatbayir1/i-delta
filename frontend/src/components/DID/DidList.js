@@ -1,25 +1,22 @@
 // Libraries
 import React, { Component } from 'react'
 import { connect } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 // Components
 import {
-    ResourceList, ConfirmationButton, Appearance, ResourceCard,
-    Panel, ComponentSize, Grid, Columns, Form, Input, FlexBox, SlideToggle,
-    Button, IconFont, ButtonType, ComponentColor, SelectDropdown, TextArea,
-    ComponentStatus, QuestionMarkTooltip, InfluxColors, SquareButton, DapperScrollbars,
+    ResourceList, ConfirmationButton, Appearance, ResourceCard, ComponentSize,
+    FlexBox, IconFont, ComponentColor, Button,
 } from '@influxdata/clockface'
 
-// Constants
-import {
-    tipStyle, personalInformation, addressesOfBCandSC,
-} from '../../shared/constants/tips';
-
-// Notifications
-import { NotificationManager } from 'react-notifications';
-
 // Actions
-import { fetchDidList } from "../../store/";
+import { fetchDidList, fetchResolveDid } from "../../store/";
+
+// Constants
+import { resolveEbsiDidURl } from "../../config";
+
+// Helpers
+import { mongoDateToString } from "../../helpers/DateOperations";
 
 class DidList extends Component {
     constructor(props) {
@@ -35,45 +32,22 @@ class DidList extends Component {
         await fetchDidList();
     }
 
-    contextMenu = (project) => {
+    resolveDid = async (did) => {
+        const { fetchResolveDid } = this.props;
+
+        await fetchResolveDid(`${resolveEbsiDidURl}/${did.did}`);
+    }
+
+    contextMenu = (did) => {
         return (
             <>
                 <FlexBox margin={ComponentSize.ExtraSmall}>
-                    <ConfirmationButton
+                    <Button
                         icon={IconFont.Export}
                         size={ComponentSize.ExtraSmall}
-                        onConfirm={() => { }}
-                        text={""}
-                        popoverColor={ComponentColor.Primary}
-                        popoverAppearance={Appearance.Outline}
+                        text={"Resolve"}
                         color={ComponentColor.Primary}
-                        confirmationLabel="Do you want to export ?"
-                        confirmationButtonColor={ComponentColor.Primary}
-                        confirmationButtonText="Yes"
-                    />
-                    <ConfirmationButton
-                        icon={IconFont.Duplicate}
-                        size={ComponentSize.ExtraSmall}
-                        onConfirm={() => { this.props.fetchCloneProject(project) }}
-                        text={""}
-                        popoverColor={ComponentColor.Secondary}
-                        popoverAppearance={Appearance.Outline}
-                        color={ComponentColor.Secondary}
-                        confirmationLabel="Do you want to clone ?"
-                        confirmationButtonColor={ComponentColor.Secondary}
-                        confirmationButtonText="Yes"
-                    />
-                    <ConfirmationButton
-                        icon={IconFont.Trash}
-                        size={ComponentSize.ExtraSmall}
-                        onConfirm={() => { this.props.fetchDeleteProject({ "id": project["_id"]["$oid"] }) }}
-                        text={""}
-                        popoverColor={ComponentColor.Danger}
-                        popoverAppearance={Appearance.Outline}
-                        color={ComponentColor.Danger}
-                        confirmationLabel="Do you want to delete ?"
-                        confirmationButtonColor={ComponentColor.Danger}
-                        confirmationButtonText="Yes"
+                        onClick={() => { this.resolveDid(did) }}
                     />
                 </FlexBox>
             </>
@@ -92,19 +66,23 @@ class DidList extends Component {
                                 return (
                                     <ResourceCard
                                         key={idx}
-                                        contextMenu={this.contextMenu("a")}
+                                        contextMenu={this.contextMenu(did)}
                                         margin={ComponentSize.Medium}
                                         style={{ paddingBottom: '20px', marginBottom: '5px' }}
                                     >
                                         <ResourceCard.EditableName
                                             onUpdate={this.handleUpdateScraperName}
-                                            name={did.didName}
+                                            name={did.name}
                                             noNameString={"default name"}
                                             buttonTestID="editable-name"
                                             inputTestID="input-field"
                                         />
                                         <ResourceCard.Meta>
-                                            Did: {did.did}
+                                            {[
+                                                <React.Fragment key={uuidv4()}>Did: {did.did}</React.Fragment>,
+                                                <React.Fragment key={uuidv4()}>Email: {did.email}</React.Fragment>,
+                                                <React.Fragment key={uuidv4()}>Created At: {mongoDateToString(did.createdAt)}</React.Fragment>,
+                                            ]}
                                         </ResourceCard.Meta>
                                     </ResourceCard>
                                 )
@@ -126,6 +104,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchDidList: () => dispatch(fetchDidList()),
+        fetchResolveDid: (did, url) => dispatch(fetchResolveDid(did, url))
     }
 }
 

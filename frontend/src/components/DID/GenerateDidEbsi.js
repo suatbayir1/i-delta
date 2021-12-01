@@ -38,8 +38,6 @@ class GenerateDidEbsi extends Component {
             name: "",
             email: "",
             location: "",
-            didName: "",
-            passPhrase: "",
             isJsonCorrect: false,
             didDocument: {},
             defaultDidDocument: {
@@ -54,7 +52,13 @@ class GenerateDidEbsi extends Component {
 
     componentDidMount() {
         const { user } = this.props;
-        this.setState({ name: `${user.firstname} ${user.lastname}` })
+        console.log(user);
+
+        this.setState({
+            name: `${user.firstname} ${user.lastname}`,
+            email: user.email,
+            location: user?.location
+        })
 
         this.setState({ didDocument: this.state.defaultDidDocument });
     }
@@ -78,11 +82,11 @@ class GenerateDidEbsi extends Component {
     }
 
     generate = async () => {
-        const { addresses, name, email, location, didName, passPhrase, didDocument } = this.state;
+        const { addresses, name, email, location, didDocument } = this.state;
         const { fetchGenerateDID, user } = this.props;
         let error = false;
 
-        if (name.trim() === "" || email.trim() === "" || didName.trim() === "" || passPhrase.trim() === "") {
+        if (name.trim() === "" || email.trim() === "") {
             NotificationManager.error('Please fill out the form completely', 'Error', 3000);
             return;
         }
@@ -95,27 +99,17 @@ class GenerateDidEbsi extends Component {
             }
         })
 
-        console.log(didDocument);
-
         if (!error) {
             const payload = {
                 name,
                 email,
                 location,
                 addresses,
-                didName,
-                passPhrase,
                 didDocument,
-                createdAt: Date.now()
             }
 
             await fetchGenerateDID(payload, createEbsiDidUrl);
         }
-    }
-
-
-    handleChooseDidType = (didType) => {
-        console.log(didType);
     }
 
     render() {
@@ -156,6 +150,7 @@ class GenerateDidEbsi extends Component {
                                                 <Input
                                                     onChange={(e) => { this.setState({ name: e.target.value }) }}
                                                     value={name}
+                                                    status={ComponentStatus.Disabled}
                                                 />
                                             </Form.Element>
                                         </Grid.Column>
@@ -168,6 +163,7 @@ class GenerateDidEbsi extends Component {
                                                 <Input
                                                     onChange={(e) => { this.setState({ email: e.target.value }) }}
                                                     value={email}
+                                                    status={ComponentStatus.Disabled}
                                                 />
                                             </Form.Element>
                                         </Grid.Column>
@@ -182,6 +178,7 @@ class GenerateDidEbsi extends Component {
                                                     value={location}
                                                     onChange={(e) => { this.setState({ location: e.target.value }) }}
                                                     rows={3}
+                                                    status={ComponentStatus.Disabled}
                                                 />
                                             </Form.Element>
                                         </Grid.Column>
@@ -336,55 +333,6 @@ class GenerateDidEbsi extends Component {
                                                         width="100%"
                                                     />
                                                 </div>
-                                            </Form.Element>
-                                        </Grid.Column>
-                                    </Grid.Row>
-                                </Panel>
-                            </Grid.Column>
-
-                            {/* DID INFORMATION */}
-                            <Grid.Column widthXS={Columns.Six}>
-                                <Panel style={{ backgroundColor: '#292933', padding: '10px', marginTop: '20px' }}>
-                                    <FlexBox
-                                        style={{ marginBottom: '20px' }}
-                                        margin={ComponentSize.Medium}
-                                    >
-                                        <h2 style={{ color: '#B1B6FF' }}>Did Information</h2>
-                                        <QuestionMarkTooltip
-                                            diameter={20}
-                                            tooltipStyle={{ width: '400px' }}
-                                            color={ComponentColor.Secondary}
-                                            tooltipContents={<div style={{ whiteSpace: 'pre-wrap', fontSize: "13px" }}>
-                                                <div style={{ color: InfluxColors.Star }}>{"Personal information:"}
-                                                    <hr style={tipStyle} />
-                                                </div>
-                                                {personalInformation}
-                                            </div>}
-                                        />
-                                    </FlexBox>
-
-                                    <Grid.Row>
-                                        <Grid.Column widthXS={Columns.Six}>
-                                            <Form.Element
-                                                label="DID Name"
-                                                required={true}
-                                            >
-                                                <Input
-                                                    onChange={(e) => { this.setState({ didName: e.target.value }) }}
-                                                    value={didName}
-                                                />
-                                            </Form.Element>
-                                        </Grid.Column>
-
-                                        <Grid.Column widthXS={Columns.Six}>
-                                            <Form.Element
-                                                label="Pass Phrase"
-                                                required={true}
-                                            >
-                                                <Input
-                                                    onChange={(e) => { this.setState({ passPhrase: e.target.value }) }}
-                                                    value={passPhrase}
-                                                />
                                             </Form.Element>
                                         </Grid.Column>
                                     </Grid.Row>

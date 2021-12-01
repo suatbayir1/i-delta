@@ -14,6 +14,7 @@ import Logout from '../components/Auth/Logout';
 import Projects from '../containers/Projects/Projects';
 import AddProject from "../shared/overlays/AddProject";
 import DID from "../containers/DID/DID";
+import Profile from '../containers/Auth/Profile';
 
 class UserLayout extends Component {
     render() {
@@ -30,6 +31,7 @@ class UserLayout extends Component {
                             <Route exact path="/add-project" component={AddProject} />
                             <Route exact path="/project/:id" component={Project} />
                             <Route exact path="/did" component={DID} />
+                            <Route exact path="/profile" component={Profile} />
                             <Route exact path="/" component={ExamplePage} />
                         </Switch>
                     </Router>

@@ -9,3 +9,4 @@ export const testServer = 'https://api.shasta.trongrid.io';
 
 // Ebsi DID URLS
 export const createEbsiDidUrl = `${NODE_URL}did/createEbsiDid`;
+export const resolveEbsiDidURl = `${NODE_URL}did/resolveEbsiDid`;

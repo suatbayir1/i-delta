@@ -23,6 +23,11 @@ token = dict(
     token_invalid = "Token invalid",
 )
 
+editProfile = dict(
+    success = "User profile updated successfully",
+    failure = "An error occurred while updating a profile"
+)
+
 # PROJECT
 add_project = dict(
     already_exists = "This project name already exists",
@@ -71,7 +76,7 @@ add_transaction = dict(
     success = "Transaction created successfully"
 )
 
-ddelete_transaction = dict(
+delete_transaction = dict(
     success = "Transaction deleted successfully"
 )
 

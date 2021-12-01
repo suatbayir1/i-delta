@@ -4,6 +4,7 @@ from app.middlewares.ApiBase import ApiBase
 from app.config import required_keys, request_keys, response_messages, secret
 from app.models.AuthModel import AuthModel
 from datetime import datetime
+from app.helpers.HelperFunctions import token_control
 from werkzeug.security import check_password_hash
 import jwt
 import datetime
@@ -62,6 +63,7 @@ class AuthController(FlaskView, ApiBase):
 
             payload = ApiBase.check_request_params(self, request.json, request_keys.auth["signUp"])
             payload["createdAt"] = datetime.datetime.now()
+            payload["role"] = "member" 
 
             result = self.authModel.add_user(payload)
 
@@ -69,5 +71,29 @@ class AuthController(FlaskView, ApiBase):
                 return ApiBase.response(self, message = response_messages.signUp["already_exists"]), 409
             
             return ApiBase.response(self, message = response_messages.signUp["success"]), 200
+        except:
+            return ApiBase.response(self, message = response_messages.general["unexpected_error"]), 400
+
+
+    @route("profile/edit", methods = ["PUT"])
+    @token_control(roles = ["admin", "member"])
+    def editProfile(self, user):
+        try:
+            if not request.json:
+                return ApiBase.response(self, message = "Request body cannot be empty"), 400
+
+            payload = ApiBase.check_request_params(self, request.json, request_keys.auth["editProfile"]), 400
+
+            if not payload[0]:
+                return ApiBase.response(self, message = "Request body did not match database"), 400
+
+            result = self.authModel.edit_profile(user, payload[0])
+
+            if not result:
+                return ApiBase.response(self, message = response_messages.editProfile["failure"]), 500
+
+            updatedUser = self.authModel.get_user_by_id(user["userID"])
+
+            return ApiBase.response(self, message = response_messages.editProfile["success"], data = updatedUser[0]), 200
         except:
             return ApiBase.response(self, message = response_messages.general["unexpected_error"]), 400

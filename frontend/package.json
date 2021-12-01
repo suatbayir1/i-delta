@@ -33,6 +33,7 @@
     "redux-thunk": "^2.3.0",
     "sass": "^1.35.2",
     "tronweb": "^3.2.7",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

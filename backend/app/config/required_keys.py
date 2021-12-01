@@ -1,5 +1,5 @@
 auth = dict(
-    signUp = ["username", "password", "role"],
+    signUp = ["username", "password"],
     signIn = ["username", "password"],
 )
 

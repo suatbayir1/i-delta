@@ -1,6 +1,10 @@
 {
     "getAllDids": [
         "superadmin",
+        "admin"
+    ],
+    "getSingleDid": [
+        "superadmin",
         "admin",
         "member"
     ],
@@ -9,7 +13,17 @@
         "admin",
         "member"
     ],
+    "deleteDid": [
+        "superadmin",
+        "admin",
+        "member"
+    ],
     "createEbsiDid": [
+        "superadmin",
+        "admin",
+        "member"
+    ],
+    "resolveEbsiDid": [
         "superadmin",
         "admin",
         "member"

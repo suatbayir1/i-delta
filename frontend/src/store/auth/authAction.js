@@ -6,7 +6,7 @@ import { API_URL } from "../../config";
 import { history } from "../../history";
 
 // Types
-import { LOGIN_SUCCESS, LOGIN_ERROR, SIGNUP_SUCCESS, SIGNUP_ERROR, LOGOUT } from "./authTypes";
+import { LOGIN_SUCCESS, LOGIN_ERROR, SIGNUP_SUCCESS, SIGNUP_ERROR, LOGOUT, UPDATE_PROFILE } from "./authTypes";
 
 // Notification
 import { NotificationManager } from 'react-notifications';
@@ -103,5 +103,32 @@ export const fetchSignup = (payload) => {
 export const logout = () => {
     return {
         type: LOGOUT,
+    }
+}
+
+
+const updateProfile = (payload) => {
+    return {
+        type: UPDATE_PROFILE,
+        payload,
+    }
+}
+
+export const fetchUpdateProfile = (payload) => {
+    return (dispatch, getState) => {
+        let url = `${API_URL}auth/profile/edit`;
+
+        axios
+            .put(url, payload, { headers: { 'token': getState().auth.token } })
+            .then(response => {
+                if (response.status === 200) {
+                    const result = JSON.parse(response.data.data.data);
+                    dispatch(updateProfile(result));
+                    NotificationManager.success(response.data.data.message, 'Success', 2000);
+                }
+            })
+            .catch(err => {
+                NotificationManager.error(err.response.data.data.message, 'Error', 3000);
+            })
     }
 }

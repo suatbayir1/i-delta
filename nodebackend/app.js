@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const expressValidator = require('express-validator');
 const cors = require("cors");
-const auth = require('./middlewares/auth');
+const { isAuthenticated } = require('./middlewares/auth');
 const connectDatabase = require('./helpers/database/connectDatabase');
 const routers = require('./routes/index');
 const customErrorHandler = require('./middlewares/errors/customErrorHandler');
@@ -11,7 +11,7 @@ require('dotenv/config')
 // Middlewares
 app.use(cors());
 app.use(expressValidator());
-app.use(auth.isAuthenticated);
+app.use(isAuthenticated);
 
 // Express BodyParser
 app.use(express.json());

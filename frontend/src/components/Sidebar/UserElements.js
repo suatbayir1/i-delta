@@ -14,7 +14,14 @@ class UserElements extends Component {
         return (
             <TreeNav.User username={`${user.firstname} ${user.lastname}`} team={user.role}>
                 <TreeNav.UserItem
-                    id="users"
+                    id="profile"
+                    label="Profile"
+                    linkElement={className => (
+                        <Link className={className} to={"/profile"} />
+                    )}
+                />
+                <TreeNav.UserItem
+                    id="my-projects"
                     label="My Projects"
                     linkElement={className => (
                         <Link className={className} to={"/my-projects"} />

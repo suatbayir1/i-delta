@@ -68,7 +68,7 @@ class SignUp extends Component {
     handleSignUp = async () => {
         const { firstname, lastname, email, username, password } = this.state;
 
-        await this.props.fetchSignup({ firstname, lastname, email, username, password, "role": "member" });
+        await this.props.fetchSignup({ firstname, lastname, email, username, password });
     }
 
     render() {

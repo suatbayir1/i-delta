@@ -6,6 +6,9 @@ import { connect } from "react-redux";
 import DidTypeListButtons from "./DidTypeListButtons";
 import GenerateDidEbsi from "./GenerateDidEbsi";
 
+// Actions
+import { fetchGetSingleDid, } from "../../store/";
+
 class GenerateDID extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +17,7 @@ class GenerateDID extends Component {
             selectedDidType: "did:ebsi",
         }
     }
+
 
     render() {
         const { selectedDidType } = this.state;

@@ -1,4 +1,4 @@
-import { LOGIN_ERROR, LOGIN_SUCCESS, SIGNUP_SUCCESS, SIGNUP_ERROR, LOGOUT } from "./authTypes";
+import { LOGIN_ERROR, LOGIN_SUCCESS, SIGNUP_SUCCESS, SIGNUP_ERROR, LOGOUT, UPDATE_PROFILE } from "./authTypes";
 
 const initialState = {
     token: "",
@@ -14,6 +14,11 @@ const authReducer = (state = initialState, action) => {
                 ...state,
                 token: action.payload.token,
                 user: action.payload.user,
+            }
+        case UPDATE_PROFILE:
+            return {
+                ...state,
+                user: action.payload,
             }
         case LOGIN_ERROR:
             return {

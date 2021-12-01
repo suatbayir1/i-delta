@@ -2,6 +2,7 @@ export {
     fetchLogin,
     fetchSignup,
     logout,
+    fetchUpdateProfile,
 } from "./auth/authAction"
 
 export {
@@ -42,4 +43,9 @@ export {
     fetchGenerateDID,
     clearKeyPair,
     fetchDidList,
+    fetchResolveDid,
+    clearResolvedDid,
+    fetchGetSingleDid,
+    fetchDeleteDid,
+    changeDidSelectedTab,
 } from "./did/didAction";
